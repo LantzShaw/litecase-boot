@@ -1,4 +1,4 @@
-package com.litecase.boot.bean;
+package com.litecase.boot.web.bean;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
