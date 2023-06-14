@@ -87,3 +87,22 @@ mysql-connector-java  -> 数据库连接
 
 参考文章: https://blog.csdn.net/dlhjw1412/article/details/118886601?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-118886601-blog-124501825.235%5Ev38%5Epc_relevant_yljh&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-118886601-blog-124501825.235%5Ev38%5Epc_relevant_yljh&utm_relevant_index=5
 ```
+
+**IDEA打开后提示：Lombok Requires Annotation Processing: Do you want to enable annotation processors?**
+
+```text
+这个问题的具体愿意是因为项目中引用lombok的jar包编译无法通过
+
+在网上搜索发现大多数修改方法都是下面这个方法
+依次点击 File——Setting——Build.Execution.Deployment——Compiler——Annotation—— Processors ，勾选窗口上的 Enable Annotation Processing(启用批注处理)=> 应用-确定即可
+
+参考文章: https://blog.csdn.net/weixin_45869725/article/details/114384026
+```
+
+**Jackson日期转换少一天**
+
+```text
+用LocalDateTime 配合GMT+8时区，可以解决
+
+参考文章: https://www.cnblogs.com/yuan-/p/11703280.html
+```
