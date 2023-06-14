@@ -21,25 +21,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
-            <!--            <scope>runtime</scope>-->
+            <!-- <scope>runtime</scope> -->
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
@@ -55,8 +51,12 @@
             <artifactId>mybatis-plus-core</artifactId>
             <version>3.5.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>4.1.0</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -65,5 +65,64 @@
             </plugin>
         </plugins>
     </build>
-
+    <!--    仓库地址配置 -->
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>public</id>-->
+    <!--            <name>aliyun nexus</name>-->
+    <!--            <url>https://maven.aliyun.com/repository/public/</url>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </releases>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
+    <!--    <pluginRepositories>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>public</id>-->
+    <!--            <name>aliyun nexus</name>-->
+    <!--            <url>https://maven.aliyun.com/repository/public/</url>-->
+    <!--            <releases>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </releases>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>false</enabled>-->
+    <!--            </snapshots>-->
+    <!--        </pluginRepository>-->
+    <!--    </pluginRepositories>-->
+    <!--    环境配置-->
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>local</id>-->
+    <!--            <properties>-->
+    <!--                &lt;!&ndash; 环境标识，需要与配置文件的名称相对应 &ndash;&gt;-->
+    <!--                <profiles.active>local</profiles.active>-->
+    <!--                <logging.level>debug</logging.level>-->
+    <!--                <knife4j.production>false</knife4j.production>-->
+    <!--                <endpoints.include>'*'</endpoints.include>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>dev</id>-->
+    <!--            <properties>-->
+    <!--                &lt;!&ndash; 环境标识，需要与配置文件的名称相对应 &ndash;&gt;-->
+    <!--                <profiles.active>dev</profiles.active>-->
+    <!--                <logging.level>debug</logging.level>-->
+    <!--                <knife4j.production>false</knife4j.production>-->
+    <!--                <endpoints.include>'*'</endpoints.include>-->
+    <!--            </properties>-->
+    <!--            <activation>-->
+    <!--                &lt;!&ndash; 默认环境 &ndash;&gt;-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--            </activation>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>prod</id>-->
+    <!--            <properties>-->
+    <!--                <profiles.active>prod</profiles.active>-->
+    <!--                <logging.level>warn</logging.level>-->
+    <!--                <knife4j.production>true</knife4j.production>-->
+    <!--                <endpoints.include>health, info, logfile</endpoints.include>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
 </project>

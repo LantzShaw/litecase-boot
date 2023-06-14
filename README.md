@@ -106,3 +106,20 @@ mysql-connector-java  -> 数据库连接
 
 参考文章: https://www.cnblogs.com/yuan-/p/11703280.html
 ```
+
+**常用技术栈**
+
+```text
+1. Xxl-Job 分布式任务调度
+2. Knife4j  文档
+3. Hutool、Lombok  工具类
+4. Alibaba EasyExcel Excel框架
+5. Jackson 序列化框架
+6. Redis 缓存数据库 
+7. Lock4j 分布式锁 
+8. Validation 校验框架
+9. SpringMessage 国际化
+```
+
+## Questions
+
