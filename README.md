@@ -107,6 +107,28 @@ mysql-connector-java  -> 数据库连接
 参考文章: https://www.cnblogs.com/yuan-/p/11703280.html
 ```
 
+**idea新建mapper xml模板文件**
+
+```text
+这个文件是模板文件，需要在idea设置中添加（Settings -> Editor -> File and Code Template)
+
+然后添加新的模板 文件后缀是xml 内容如下
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="">
+    
+</mapper>
+
+参考文章: https://blog.csdn.net/qq_48455576/article/details/113838269
+```
+
+**springboot整合mybatis使用xml实现sql语句的配置,在insert之后返回自增id**
+
+```text
+参考文章: https://blog.csdn.net/weixin_43944305/article/details/106300945
+```
+
 **常用技术栈**
 
 ```text
