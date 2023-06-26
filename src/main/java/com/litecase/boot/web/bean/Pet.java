@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 public class Pet {
     String name;
-    int genderType;
-    int age;
+    Integer genderType;
+    Integer age;
 
 //    public Pet() {
 //        this.name = name;

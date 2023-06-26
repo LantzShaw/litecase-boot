@@ -12,6 +12,17 @@ spring:
 #      minimum-idle: 5
 #      idle-timeout: 30000
 
+mybatis:
+  mapper-locations: classpath:mapper/*.xml # 配置mybatis扫描mapper文件xml的路径
+
+#  使用map-underscore-to-camel-case/db-column-underline在插入数据的时候将实体类的驼峰格式转成下划线格式
+#  只要设置db-column-underline与map-underscore-to-camel-case任意一个参数为true，实体类的字段都会自动转下划线的格式.
+#mybatis-plus:
+#  global:
+#    db-column-underline: true
+#    configuration:
+#      map-underscore-to-camel-case: true
+
 server:
   port: 9000
 

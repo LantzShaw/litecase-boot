@@ -1,6 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 上面是头部命名空间 -->
+<mapper namespace="com.litecase.boot.web.mapper.UserMapper"> <!--对应的mapper类的包路径-->
+    <resultMap id="baseResultMap" type="com.litecase.boot.web.model.entity.User"> <!--返回查询结果对应的实体类-->
+        <id column="user_id" property="userId"/> <!--这里的id代表主键-->
+    </resultMap>
 
-</beans>
+    <select id="selectByUserId" resultMap="baseResultMap"
+            parameterType="java.lang.Integer"> <!--传参是对象的话parameterType就写那个对象的路径,这边是int的type-->
+        select user_id,
+        user_name,
+        -- name是变量
+        <!--        <if test="name == 'Lantz'">-->
+        <!--            -->
+        <!--        </if>-->
+        from user
+    </select>
+</mapper>
