@@ -156,6 +156,60 @@ mysql-connector-java  -> 数据库连接
 @NotEmpty 一般用于集合类中
 ```
 
+**default 方法**
+
+```text
+Default方法是指，在接口内部包含了一些默认的方法实现（也就是接口中可以包含方法体，这打破了Java之前版本对接口的语法限制），从而使得接口在进行扩展的时候，不会破坏与接口相关的实现类代码
+
+interface InterfaceA{
+    void doFirstWork();
+    default void doSecondWork(){
+        System.out.println("doSecondWork");
+    }
+}
+ 
+class InterfaceImpl implements InterfaceA{
+    @Override
+    public void doFirstWork() {
+        System.out.println("doFirstWork");
+    }
+}
+ 
+public class Test {
+    public static void main(String[] args) {
+        InterfaceImpl obj = new InterfaceImpl();
+        obj.doFirstWork();
+        obj.doSecondWork();
+    }
+}
+输出：
+doFirstWork
+doSecondWork
+```
+
+**@Autowired、@Resource、@Reference 与@Inject注解的区别**
+
+```text
+1.@Autowired
+org.springframework.beans.factory.annotation.Autowired
+SpringBoot项目中常用。简单来说就是引入由Spring容器管理的bean。
+
+ // 若是使用@Autowired // FruitServiceImpl 需要添加类似@Component, @Service, @Repository, @Controller or @Indexed注解，不然会报错
+
+
+2.@Resource
+javax.annotation.Resource
+作用相当于@Autowired，只不过@Autowired是byType自动注入，而@Resource默认byName自动注入。
+
+3.@Reference
+@Reference是dubbo的注解，也是注入，他一般注入的是分布式的远程服务的对象，需要dubbo配置使用。
+
+简单来说他们的区别：
+@Reference注入的是分布式中的远程服务对象，@Resource和@Autowired注入的是本地spring容器中的对象。
+
+参考文章: https://blog.csdn.net/u014662858/article/details/84262544
+```
+
 **常用技术栈**
 
 ```text
