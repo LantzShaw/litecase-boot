@@ -3,6 +3,7 @@ package com.litecase.boot.web.model;
 import java.io.Serializable;
 
 public class BaseEntity implements Serializable {
+    //    序列化版本号
     private static final long serialVersionUID = 1L;
 
     /**

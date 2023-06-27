@@ -2,8 +2,6 @@ package com.litecase.boot.web.controller;
 
 import com.litecase.boot.web.model.entity.User;
 import com.litecase.boot.web.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +10,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/user")
-public class userController {
+public class UserController {
     private UserService userService;
 
 
