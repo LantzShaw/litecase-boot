@@ -5,12 +5,16 @@ spring:
     username: root
     # 密码纯数字不需要加引号
     password: 123456
-#    默认配置 hikari数据源
-#    type: com.zaxxer.hikari.HikariDataSource
-#    hikari:
-#      maximum-pool-size: 15
-#      minimum-idle: 5
-#      idle-timeout: 30000
+  #    默认配置 hikari数据源
+  #    type: com.zaxxer.hikari.HikariDataSource
+  #    hikari:
+  #      maximum-pool-size: 15
+  #      minimum-idle: 5
+  #      idle-timeout: 30000
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml # 配置mybatis扫描mapper文件xml的路径
