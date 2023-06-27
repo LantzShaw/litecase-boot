@@ -129,6 +129,33 @@ mysql-connector-java  -> 数据库连接
 参考文章: https://blog.csdn.net/weixin_43944305/article/details/106300945
 ```
 
+**serialVersionUID 是干什么的？**
+
+```text
+序列化运行时将一个版本号（称为serialVersionUID）与每个可序列化类相关联，该版本号在反序列化期间用于验证序列化对象的发送方和接收方是否为该对象加载了与序列化兼容的类。
+
+强烈建议所有可序列化类显式声明serialVersionUID值，因为默认的 serialVersionUID 计算对类详细信息高度敏感，这些详细信息可能因编译器实现而异，因此在反序列化过程中可能会导致意外的InvalidClassExceptions。
+
+因此，为了保证在不同的java编译器实现中SerialVersionId值是一致的，可序列化类必须声明一个显式的SerialVersionId值。还强烈建议显式 serialVersionUID 声明尽可能使用 private 修饰符，因为此类声明仅适用于立即声明的类——serialVersionUID字段不可用作继承成员。
+
+参考文章: https://zhuanlan.zhihu.com/p/347246506
+```
+
+**@NotNull、@NotBlank与@NotEmpty的区别**
+
+```text
+@NotNull：不能为null，但可以为empty(""," “,” ") ，一般用在基本数据类型的非空校验上，而且被其标注的字段可以使用 @size/@Max/@Min对字段数值进行大小的控制，例如Integer、BigDecimal、String等
+@NotBlank: 只应用于char值可读序列，即只用于String，且不能为null
+@NotEmpty：不能为null，而且长度必须大于0(" “,” ")，一般用在集合类上面
+
+
+@NotNull 一般用于Integer 、 bigDecimal、String
+
+@NotBlank 一般用于Sting，且不能为null
+
+@NotEmpty 一般用于集合类中
+```
+
 **常用技术栈**
 
 ```text
