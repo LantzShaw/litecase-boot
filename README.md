@@ -210,11 +210,62 @@ javax.annotation.Resource
 参考文章: https://blog.csdn.net/u014662858/article/details/84262544
 ```
 
+**Serializable的理解**
+
+```text
+使用场景: 本地存储、网络传输
+
+ObjectOutputStream
+
+凡是离开内存的信息都需要进行序列化，所以java中要实现对象IO读写操作都必须实现Serializable接口，否则报错
+```
+
+**@Mapper与@Repository的区别**
+
+```text
+1. @Mapper注解写在每个Dao接口层的接口类上，@MapperScan注解写在SpringBoot的启动类上。
+
+2. 当我们的一个项目中存在多个Dao层接口的时候，此时我们需要对每个接口类都写上@Mapper注解，非常的麻烦，此时可以使用@MapperScan注解来解决这个问题。让这个接口进行一次性的注入，不需要在写@Mapper注解
+
+3. @Mapper注解相当于是@Reponsitory注解和@MapperScan注解的和，会自动的进行配置加载。
+
+4. @MapperScan注解多个包，@Mapper只能把当前接口类进行动态代理。
+
+在实际开发中，如何使用@Mapper、@MapperSacn、@Reponsitory注解？？？
+
+在SpringBoot的启动类上给定@MapperSacn注解。此时Dao层可以省略@Mapper注解，当让@Reponsitory注解可写可不写，最好还是写上。
+当使用@Mapper注解的时候，可以省略@MapperSacn以及@Reponsitory。
+
+建议：
+
+以后在使用的时候，在启动类上给定@MapperScan("Dao层接口所在的包路径")。在Dao层上不写@Mapper注解，写上@Reponsitory即可。
+
+有时候会在xml文件中写sql，有时候会直接在mapper接口，例如：UserMapper中通过@Select、@Insert、@Delete、@Update去写SQL,
+前者可用于复杂的sql，并且利于维护管理，后者可用于书写一些简单的sql
+
+UserMapper 会映射到 UserMapper.xml
+通过@Param注解传递参数
+mapper接口
+public User selectUser(@Param("userName") String name,@Param("password") String pwd);
+
+xml文件
+selectUser 相当于 <select id="selectUser"></select>中的id 两者一定要对应上
+通过#{userName} 方式访问
+
+注意点：
+
+当使用了@Param注解来声明参数的时候，SQL语句取值使用#{}，${}取值都可以。
+当不使用@Param注解声明参数的时候，必须使用的是#{}来取参数。使用${}方式取值会报错。
+不使用@Param注解时，参数只能有一个，可以是一个基本的数据也可以是一个JavaBean。如果是JavaBean最好还是声明一个@Param注解。
+
+链接：https://juejin.cn/post/7159004945230856200
+```
+
 **常用技术栈**
 
 ```text
 1. Xxl-Job 分布式任务调度
-2. Knife4j  文档
+2. Knife4j  接口文档
 3. Hutool、Lombok  工具类
 4. Alibaba EasyExcel Excel框架
 5. Jackson 序列化框架
@@ -222,6 +273,7 @@ javax.annotation.Resource
 7. Lock4j 分布式锁 
 8. Validation 校验框架
 9. SpringMessage 国际化
+10. Thymeleaf、Velocity、FreeMarker模板引擎 
 ```
 
 ## Questions
