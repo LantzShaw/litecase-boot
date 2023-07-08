@@ -5,8 +5,14 @@
 <mapper namespace="com.litecase.boot.web.mapper.UserMapper"> <!--对应的mapper类的包路径-->
     <resultMap id="baseResultMap" type="com.litecase.boot.web.model.entity.User"> <!--返回查询结果对应的实体类-->
         <id column="user_id" property="userId"/> <!--这里的id代表主键-->
+        <result column="user_name" property="userName"/>
+        <result column="gender" property="gender"/>
+        <result column="age" property="age"/>
     </resultMap>
-
+    <insert id="addUser">
+        INSERT INTO user (user_id, user_name, gender, age)
+        VALUES (#{User.userName}, #{User.gender}, #{User.age})
+    </insert>
     <select id="selectByUserId" resultMap="baseResultMap"
             parameterType="java.lang.Integer"> <!--传参是对象的话parameterType就写那个对象的路径,这边是int的type-->
         select user_id,
@@ -16,5 +22,14 @@
         <!--            -->
         <!--        </if>-->
         from user
+    </select>
+    <select id="getUsers" resultType="com.litecase.boot.web.model.entity.User">
+        select *
+        from user
+    </select>
+    <select id="getUserById" resultType="com.litecase.boot.web.model.entity.User">
+        select *
+        from user t
+        where t.user_id = #{id}
     </select>
 </mapper>

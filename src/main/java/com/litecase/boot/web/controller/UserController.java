@@ -2,10 +2,14 @@ package com.litecase.boot.web.controller;
 
 import com.litecase.boot.web.model.entity.User;
 import com.litecase.boot.web.service.UserService;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.*;
 
 @RestController
@@ -13,12 +17,16 @@ import java.util.*;
 public class UserController {
     private UserService userService;
 
+    // 获取application.yml文件配置 并设置默认值（application.yml文件的配置优先级更高），默认值可有可无
+    @Value("${spring.servlet.multipart.max-file-size:110KB}")
+    private String FILE_LIMIT_SIZE;
+
 
     @GetMapping("/update/{id}/{name}") // http://localhost:9000/user/update/12/132
     public void updateUser(@PathVariable("id") Integer id, @PathVariable("name") String name) {
         System.out.println("id: " + id + "name" + name);
 
-//        userService.save();
+        // userService.save();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -26,17 +34,112 @@ public class UserController {
 
     }
 
-    @ResponseBody // NOTE: 这个应该可有可无
-    @PostMapping("/upload")
+    /**
+     * 单文件上传
+     *
+     * @param file
+     * @return String
+     */
+    // NOTE: 这个注解应该可有可无
+    // @ResponseBody
+    @PostMapping(value = "/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return "上传失败，请选择文件";
+        }
 
-        System.out.println(file.getContentType());
+        // 文件保存目录
+        String savePath = "D:/uploads/";
+        // 源文件名
+        String originalFilename = file.getOriginalFilename();
+        // 扩展名
+        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+        // 唯一文件名
+        String uniqueSuffix = UUID.randomUUID() + ext;
+        // 构建上传路径
+        File dest = new File(savePath + uniqueSuffix);
 
+        // 检测是否存在目录
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdir();
+        }
 
-        return "---file name:" + file.getOriginalFilename() +
-                "---file type:" + file.getContentType() +
-                "---file size:" + file.getSize();
+        try {
+            file.transferTo(dest);
+            return "上传成功!";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "上传失败";
     }
+
+    /**
+     * 多文件上传
+     *
+     * @param files
+     * @return String
+     */
+    @PostMapping("/uploads")
+    public String uploadFiles(@RequestParam("files") MultipartFile[] files) {
+        System.out.println(FILE_LIMIT_SIZE);
+        // 获取项目运行的绝对路径
+        // final String savedPath = System.getProperty("user.dir");
+        // final String savedPath = "D:\\uploads\\"; 也可以 "D:/uploads/"
+        final String savedPath = "D:\\uploads\\";
+
+        if (files.length == 0) return "上传的文件不能为空，请重新上传！";
+
+        for (MultipartFile file : files) {
+            System.out.println("文件大小" + file.getSize());
+
+            // TODO: 如何全局处理文件上传异常，例如：文件大小、文件类型、文件数量, 并返回异常信息
+            // 参考文章: https://blog.csdn.net/daweozai/article/details/103575718
+            // if (file.getSize() > 1) return "上传文件太大，无法上传！";
+
+
+            String originalFilename = file.getOriginalFilename();
+            String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+            // FIXME: 这里为什么单引号也可以，但是没有得到想要的数据
+            String uniqueSuffix = new Date().getTime() + "-" + Math.round(Math.random() * 1e9) + ext;
+
+            File dest = new File(savedPath);
+
+            if (!dest.exists()) {
+                dest.mkdirs();
+            }
+
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(savedPath + uniqueSuffix);
+                fileOutputStream.write(file.getBytes());
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                System.out.println("----------" + e.getMessage());
+
+                e.printStackTrace();
+            }
+        }
+
+        return "上传成功!";
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param id
+     * @return String
+     */
+    @GetMapping("/download/{id}")
+    public String downloadFile(@PathVariable("id") String id) {
+
+
+        return "下载";
+
+    }
+
     //    @ResponseBody
 //    @PostMapping("/upload")
 //    public String uploadFile(@RequestBody MultipartFile file) {

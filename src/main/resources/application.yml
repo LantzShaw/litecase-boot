@@ -15,6 +15,12 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+  servlet:
+    multipart:
+      # 设置能接受的文件最大的大小，记得是MB,或KB, 默认大小为1MB
+      max-file-size: 100KB
+      # 设置一次上传的所有文件的大小, 默认10MB
+      max-request-size: 30MB
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml # 配置mybatis扫描mapper文件xml的路径
@@ -29,6 +35,8 @@ mybatis:
 
 server:
   port: 9000
+  tomcat:
+    max-swallow-size: 100MB # 设置multipart的max-file-size或者max-request-size时，可能需要修改tomcat的吞吐量, 设置为-1, 表示不限制大小
 
 # springdoc-openapi项目配置, 最后访问: http://localhost:9000/doc.html
 springdoc:
