@@ -9,6 +9,16 @@
         <result column="gender" property="gender"/>
         <result column="age" property="age"/>
     </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id
+        , user_name, gender,  age
+    </sql>
+    <select id="selectAll" resultMap="baseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user;
+    </select>
     <insert id="addUser">
         INSERT INTO user (user_id, user_name, gender, age)
         VALUES (#{User.userName}, #{User.gender}, #{User.age})
@@ -32,4 +42,14 @@
         from user t
         where t.user_id = #{id}
     </select>
+    <update id="updateUserById">
+        UPDATE user
+        SET user_name = #{userName}
+        WHERE user_id = #{id}
+    </update>
+    <delete id="deleteUserById">
+        DELETE
+        FROM user
+        WHERE user_id = #{id}
+    </delete>
 </mapper>
