@@ -67,7 +67,10 @@
             <version>3.5.3.1</version>
         </dependency>
     </dependencies>
+    <!-- 打包 -->
     <build>
+        <!-- 打包后的名字   -->
+        <finalName>litecase-boot</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
