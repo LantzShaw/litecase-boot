@@ -285,5 +285,144 @@ selectUser 相当于 <select id="selectUser"></select>中的id 两者一定要�
 10. Thymeleaf、Velocity、FreeMarker模板引擎 
 ```
 
+## SQL
+
+**常用sql**
+
+```text
+# 创建表 ``可以不要
+DROP TABLE IF EXISTS t_scheduled;
+CREATE TABLE `t_scheduled` (
+`cron_id` VARCHAR(30) NOT NULL PRIMARY KEY,
+`cron_name` VARCHAR(30) NULL,
+`cron` VARCHAR(30) NOT NULL
+);
+
+# 查询
+SELECT cron_id, cron_name, cron from t_scheduled;
+
+# 分页查询
+# select _column,_column from _table [where Clause] [limit N][offset M]
+# limit N : 返回 N 条记录
+# offset M : 跳过 M 条记录, 默认 M=0, 单独使用似乎不起作用
+# limit N,M : 相当于 limit M offset N , 从第 N 条记录开始, 返回 M 条记录
+# select * from _table limit (page_number-1)*lines_perpage, lines_perpage
+# 或者
+# select * from _table limit lines_perpage offset (page_number-1)*lines_perpage
+SELECT * FROM t_scheduled LIMIT 10 OFFSET 0;
+
+
+# 插入
+INSERT INTO `t_scheduled` VALUES ('14', '定时器1', '0/10 * * * * ?');
+
+# 批量插入
+INSERT INTO t_scheduled VALUES ('90', '定时器90', '0/7 * * * * ?'), ('80', 'hello', '0/8 * * * * ?');
+
+	
+# 更新	
+UPDATE `t_scheduled` SET cron_name='定时器修改' WHERE cron_id='14';
+
+# 删除
+DELETE FROM t_scheduled WHERE cron_id = '12';
+
+# 批量删除
+DELETE FROM t_scheduled WHERE cron_id in (90, 80, 2);
+
+
+# 查询记录条数
+SELECT COUNT(*) FROM t_scheduled;
+SELECT COUNT(1) as id FROM t_scheduled;
+SELECT COUNT(cron_id) as id FROM t_scheduled;
+SELECT COUNT(cron_id) as id FROM t_scheduled WHERE cron_name='hello';
+```
+
+## Code
+```text
+参考文章: https://zhuanlan.zhihu.com/p/93310283#:~:text=SpringBoot%E6%95%B4%E5%90%88mybatis%E5%AE%9E%E7%8E%B0%E6%A0%B9%E6%8D%AEid%E7%9A%84%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%2C%E7%AE%80%E5%8D%95%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E7%AD%89%20UserPo%20package%20com.qianhong.user.po%3B%20import%20java.io.Serializable%3B%20%2F%2A%2A%20%2A,nickName%3B%20%2F%2F%E5%A4%96%E9%94%AE%20%E7%94%A8%E6%88%B7%E5%9C%B0%E5%9D%80id%20private%20Integer%20addressId%3B%20%2F%2F%E7%9C%81%E7%95%A5getter%E5%92%8Csetter%20%7D
+SpringBoot整合mybatis实现根据id的批量删除,简单的增删改查等
+
+UserMapper.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianhong.user.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.qianhong.user.po.UserPo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="address_id" jdbcType="INTEGER" property="addressId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, nick_name, address_id
+  </sql>
+  <!--根据id查询用户-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--根据id删除用户-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!--添加用户-->
+  <insert id="insert" parameterType="com.qianhong.user.bo.UserBo">
+    insert into user (id, nick_name, address_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{nickName,jdbcType=VARCHAR}, #{addressId,jdbcType=INTEGER}
+      )
+  </insert>
+  <!--修改用户-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.qianhong.user.po.UserPo">
+    update user
+    <set>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="addressId != null">
+        address_id = #{addressId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.qianhong.user.po.UserPo">
+    update user
+    set nick_name = #{nickName,jdbcType=VARCHAR},
+      address_id = #{addressId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--批量添加用户-->
+  <insert id="batchInsertUserPo">
+    insert into user(id,nick_name,address_id)
+    values
+    <foreach collection="list" separator="," item="test">
+      (
+--         第一个test="test.id"是dao层传过来的参数，
+        <if test="test.id !=null">
+          id=#{test.id},
+        </if>
+        <if test="test.nickName != null">
+          nick_name=#{test.nickName},
+        </if>
+        <if test="test.addressId != null">
+          address_id=#{test.addressId}
+        </if>
+      )
+    </foreach>
+
+  </insert>
+  <!--根据id批量删除用户-->
+  <delete id="deleteUserAllById" parameterType="java.lang.String">
+    delete from
+    user  where id in
+    <foreach item="id" collection="id" open="(" close=")" separator="," >
+      #{id}
+    </foreach>
+  </delete>
+</mapper>
+```
+
 ## Questions
 
