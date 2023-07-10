@@ -261,6 +261,15 @@ selectUser 相当于 <select id="selectUser"></select>中的id 两者一定要�
 链接：https://juejin.cn/post/7159004945230856200
 ```
 
+**打包**
+
+```text
+因为springboot内置了tomcat，所以springboot项目打包成jar可以免去tomcat的配置，如果是打包成war包，则还需要配置tomcat。
+
+打包后在target目录下有两个jar文件，其中有一个jar包后缀为.original，这是Maven标准打包插件打的jar包，它只包含我们自己的Class，不包含依赖，
+而后缀为.jar的是SpringBoot打包插件创建的包含依赖的jar，可以直接运行。
+```
+
 **常用技术栈**
 
 ```text
