@@ -66,6 +66,11 @@
             <artifactId>mybatis-plus-extension</artifactId>
             <version>3.5.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.3.2</version>
+        </dependency>
     </dependencies>
     <!-- 打包 -->
     <build>

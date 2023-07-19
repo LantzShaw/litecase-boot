@@ -18,6 +18,7 @@ import java.sql.Connection;
 // @EnableScheduling 表明该类中存在定时任务
 public class LitecaseBootApplication {
 
+
     private static final Logger log = LoggerFactory.getLogger(LitecaseBootApplication.class);
 
 
