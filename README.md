@@ -261,6 +261,49 @@ selectUser 相当于 <select id="selectUser"></select>中的id 两者一定要�
 链接：https://juejin.cn/post/7159004945230856200
 ```
 
+**@PostConstruct注解的作用**
+
+```text
+参考文章: https://juejin.cn/post/7010017313625735198
+
+@PostContruct是spring框架的注解，在方法上加该注解会在项目启动的时候执行该方法，也可以理解为在spring容器初始化的时候执行该方法。
+
+ /**
+     * 项目启动时，初始化定时器
+     */
+    @PostConstruct
+    public void init()
+    {
+        List<Job> jobList = jobDao.selectJobAll();
+        for (Job job : jobList)
+        {
+            CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, job.getJobId());
+            // 如果不存在，则创建
+            if (cronTrigger == null)
+            {
+                ScheduleUtils.createScheduleJob(scheduler, job);
+            }
+            else
+            {
+                ScheduleUtils.updateScheduleJob(scheduler, job);
+            }
+        }
+    }
+
+上述代码表示在项目启动，Spring IOC容器初始化创建之后，Bean初始化之前和销毁之前，执行@PostConstruct注解的方法。一般用于一些项目初始化的设定。比如Spring IOC Container 初始化之后，用@PostConstruct注解Quartz的 CronTrigger 用于初始化定时器（向定时器中添加定时启动的JOB）。那么项目运行时就能自动的运行CronTrigger 中的job了。
+```
+***配置多模块包扫描*
+
+```text
+SpringBoot 2.3.12.RELEASE
+META-INF/spring.factories
+
+SprintBoot 2.7的新特性
+META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports 配置了还需要在启动类所在的项目中通过dependency的方式引入，才有效
+
+resources下的文件夹需要一个一个创建，不能通过 ‘.’ 的方式连续创建
+```
+
 **打包**
 
 ```text
