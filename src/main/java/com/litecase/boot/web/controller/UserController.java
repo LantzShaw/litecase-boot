@@ -1,7 +1,14 @@
 package com.litecase.boot.web.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.litecase.boot.web.common.R;
 import com.litecase.boot.web.model.entity.User;
 import com.litecase.boot.web.service.UserService;
+import com.litecase.boot.web.util.SMSUtil;
+import com.litecase.boot.web.util.ValidateCodeUtil;
+import jakarta.servlet.http.HttpSession;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StopWatch;
@@ -20,6 +27,55 @@ public class UserController {
     // 获取application.yml文件配置 并设置默认值（application.yml文件的配置优先级更高），默认值可有可无
     @Value("${spring.servlet.multipart.max-file-size:110KB}")
     private String FILE_LIMIT_SIZE;
+
+    @PostMapping("/login")
+    public R<User> login(@RequestBody Map map, HttpSession session) {
+
+        String phoneNumber = map.get("phoneNumber").toString();
+
+        String code = map.get("code").toString();
+
+        String codeInSession = (String) session.getAttribute(phoneNumber);
+
+        if(codeInSession != null && codeInSession.equals(code)) {
+            LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(User::getPhoneNumber, phoneNumber);
+
+            User user = userService.getOne(lambdaQueryWrapper);
+
+            if(user == null) {
+                user = new User();
+                user.setPhoneNumber(phoneNumber);
+                user.setStatus(1);
+                userService.save(user);
+            }
+
+            return R.success(user);
+        }
+
+       return R.error("登录失败");
+    }
+
+    @PostMapping("/send-message")
+    public R<String> sendMessage(@RequestBody  User user, HttpSession session) {
+        // 获取手机验证码
+        String phone = user.getPhoneNumber();
+
+        if(StringUtils.isNoneEmpty(user.getPhoneNumber())) {
+            // 生成随机验证码
+            String code = ValidateCodeUtil.generateValidateCode(4).toString();
+
+            // 调用阿里云API完成短信发送
+            SMSUtil.sendMessage("litecase", "", phone, code);
+
+            session.setAttribute(phone, code);
+
+            return R.success("手机验证码短信发送成功");
+        }
+
+        return R.error("短信发送失败");
+
+    }
 
 
     @GetMapping("/update/{id}/{name}") // http://localhost:9000/user/update/12/132

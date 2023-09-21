@@ -7,11 +7,23 @@ import org.springframework.context.annotation.Primary;
 @TableName("user")
 @Data
 public class User {
-    private String userId;
+    private String id;
     
-    private String userName;
+    private String username;
+
+    private String nickname;
+
+    private String phoneNumber;
+
+    private String email;
 
     private Integer gender;
 
     private Integer age;
+
+    private String idMumber;
+
+    private String avatar;
+
+    private int status;
 }

@@ -15,6 +15,15 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+      # password: 123456
+      jedis:
+        pool:
+          max-wait: 1ms # 连接池最大阻塞等待时间
+          max-active: 8 # 最大连接数
+          max-idle: 4 # 连接池中的最大空闲连接数
+          min-idle: 0 # 连接池中的最小空闲连接数
+      database: 0 # 操作的是0号数据库
+
   servlet:
     multipart:
       # 设置能接受的文件最大的大小，记得是MB,或KB, 默认大小为1MB
@@ -25,13 +34,14 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml # 配置mybatis扫描mapper文件xml的路径
 
+
 #  使用map-underscore-to-camel-case/db-column-underline在插入数据的时候将实体类的驼峰格式转成下划线格式
 #  只要设置db-column-underline与map-underscore-to-camel-case任意一个参数为true，实体类的字段都会自动转下划线的格式.
-#mybatis-plus:
-#  global:
-#    db-column-underline: true
-#    configuration:
-#      map-underscore-to-camel-case: true
+mybatis-plus:
+  global:
+    db-column-underline: true
+    configuration:
+      map-underscore-to-camel-case: true
 
 server:
   port: 9000
@@ -56,5 +66,12 @@ knife4j:
   setting:
     language: zh_cn
 
+# minio 对象存储服务配置
+S3:
+  url: http://localhost:9000
+  access-key: admin
+  secret-key: 123456
+  bucket-name: test
 
-
+litecase:
+  path: D://

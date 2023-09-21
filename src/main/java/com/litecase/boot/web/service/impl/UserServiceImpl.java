@@ -6,10 +6,21 @@ import com.litecase.boot.web.model.entity.User;
 import com.litecase.boot.web.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Override
     public void save() {
+    // this.getById('');
+
+        ArrayList<String> tempArr = new ArrayList<>();
+
+       List<String> temp2 = tempArr.stream().map(item -> {
+            return item;
+        }).collect(Collectors.toList());
 
     }
 }
