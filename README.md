@@ -467,5 +467,615 @@ UserMapper.xml
 </mapper>
 ```
 
+BizDeviceMapper.java
+```java
+package cn.ltit.bigfish.daheng.core.device.mapper;
+
+import cn.ltit.bigfish.daheng.core.device.model.dto.Gather;
+import cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem;
+import cn.ltit.bigfish.daheng.core.device.model.entity.*;
+import cn.ltit.engine.data.datascope.annotation.DataScope;
+import cn.ltit.engine.data.core.mapper.ExtendMapper;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * @author shaoqiang
+ * @version 1.0
+ * @description: TODO
+ * @date 2023/3/4 15:59
+ */
+@DataScope
+@Mapper
+public interface BizDeviceMapper extends ExtendMapper<BizDevice> {
+
+
+    IPage<BizDevice> selectExtPage(IPage<BizDevice> page, @Param("param") BizDevice param);
+
+    List<Gather> getherOne(String organizationId);
+
+    List<GatherItem> getherTwo(String organizationId);
+
+    List<GatherItem> getherThree(String organizationId);
+
+    List<GatherItem> getherFour(String organizationId);
+
+
+    List<GatherItem> getherFive(String organizationId);
+
+
+    Integer getOrgCount(@Param("param") Gather param);
+
+    Integer getSensor(@Param("param") Gather param);
+
+    Integer getGasTypeCount(@Param("param") Gather param,@Param("type") String type);
+
+    Integer getMaintRecordCount(@Param("param") Gather param);
+
+    Integer getRecordCount(@Param("param") Gather param);
+
+    Integer getTraceCount(@Param("param") Gather param);
+
+    Integer getChangeCount(@Param("param") Gather para,@Param("type") String type);
+
+    Integer getOverdueCount(@Param("param") Gather para);
+
+    List<String> getGasName(@Param("param") Gather param);
+
+    List<String> getOrgName(@Param("param") Gather param);
+
+    Integer getGasCount(@Param("param") Gather param,@Param("orgName") String orgName,@Param("gasName")String gasName);
+
+    IPage<BizDevice> getAlarmList(IPage<BizDevice> page,@Param("param") Gather param);
+
+    IPage<BizDevice> getMainList(IPage<BizDevice> page,@Param("param") Gather param);
+
+    IPage<BizDevice> getTraceaList(IPage<BizDevice> page,@Param("param") Gather param);
+
+    IPage<BizDevice> getTraceaItem(IPage<BizDevice> page,@Param("param") Gather param,@Param("id") String id);
+
+    IPage<BizDevice> getGasTypeList(IPage<BizDevice> page,@Param("param") Gather param,@Param("type") String type);
+
+
+
+    IPage<BizDevice> getOverdueItem(IPage<BizDevice> page,@Param("param") Gather param,@Param("organizationId") String organizationId);
+}
+```
+
+BizDeviceMapper.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ltit.bigfish.daheng.core.device.mapper.BizDeviceMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="reversion" property="reversion"/>
+        <result column="is_reserved" property="reserved"/>
+        <result column="ranking" property="ranking"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="group_id" property="groupId"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="dtuip_create_date" property="dtuipCreateDate"/>
+        <result column="dtuip_default_timescale" property="dtuipDefaultTimescale"/>
+        <result column="dtuip_ioc_url" property="dtuipIocUrl"/>
+        <result column="dtuip_is_alarms" property="dtuipIsAlarms"/>
+        <result column="dtuip_is_delete" property="dtuipIsDelete"/>
+        <result column="dtuip_is_line" property="dtuipIsLine"/>
+        <result column="dtuip_lat" property="dtuipLat"/>
+        <result column="dtuip_lng" property="dtuipLng"/>
+        <result column="dtuip_linktype" property="dtuipLinktype"/>
+        <result column="dtuip_user_id" property="dtuipUserId"/>
+        <result column="dtuip_user_name" property="dtuipUserName"/>
+        <result column="dtuip_id" property="dtuipId"/>
+        <result column="dtuip_product_id" property="dtuipProductId"/>
+        <result column="dtuip_product_type" property="dtuipProductType"/>
+        <result column="dtuip_protocol_label" property="dtuipProtocolLabel"/>
+        <result column="dtuip_remark" property="dtuipRemark"/>
+        <result column="dtuip_time_zone" property="dtuipTimeZone"/>
+        <result column="dtuip_group_id" property="dtuipGroupId"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ExtResultMap" type="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        <id column="id" property="id"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="reversion" property="reversion"/>
+        <result column="is_reserved" property="reserved"/>
+        <result column="ranking" property="ranking"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="group_id" property="groupId"/>
+        <result column="organization_id" property="organizationId"/>
+        <result column="dtuip_create_date" property="dtuipCreateDate"/>
+        <result column="dtuip_default_timescale" property="dtuipDefaultTimescale"/>
+        <result column="dtuip_ioc_url" property="dtuipIocUrl"/>
+        <result column="dtuip_is_alarms" property="dtuipIsAlarms"/>
+        <result column="dtuip_is_delete" property="dtuipIsDelete"/>
+        <result column="dtuip_is_line" property="dtuipIsLine"/>
+        <result column="dtuip_lat" property="dtuipLat"/>
+        <result column="dtuip_lng" property="dtuipLng"/>
+        <result column="dtuip_linktype" property="dtuipLinktype"/>
+        <result column="dtuip_user_id" property="dtuipUserId"/>
+        <result column="dtuip_user_name" property="dtuipUserName"/>
+        <result column="dtuip_id" property="dtuipId"/>
+        <result column="dtuip_product_id" property="dtuipProductId"/>
+        <result column="dtuip_product_type" property="dtuipProductType"/>
+        <result column="dtuip_protocol_label" property="dtuipProtocolLabel"/>
+        <result column="dtuip_remark" property="dtuipRemark"/>
+        <result column="dtuip_time_zone" property="dtuipTimeZone"/>
+        <result column="dtuip_group_id" property="dtuipGroupId"/>
+        <association property="bizDeviceGroup" column="group_id"
+                     select="cn.ltit.bigfish.daheng.core.device.mapper.BizDeviceGroupMapper.selectById"/>
+        <association property="sysOrganization" column="organization_id"
+                     select="cn.ltit.engine.supplier.upms.core.organization.mapper.SysOrganizationMapper.selectById"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        ,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        status,
+        reversion,
+        is_reserved,
+        ranking,
+        device_name,
+        device_no,
+        group_id,
+        organization_id,
+        dtuip_create_date,
+        dtuip_default_timescale,
+        dtuip_ioc_url,
+        dtuip_is_alarms,
+        dtuip_is_delete,
+        dtuip_is_line,
+        dtuip_lat,
+        dtuip_lng,
+        dtuip_linktype,
+        dtuip_user_id,
+        dtuip_user_name,
+        dtuip_id,
+        dtuip_product_id,
+        dtuip_product_type,
+        dtuip_protocol_label,
+        dtuip_remark,
+        dtuip_time_zone,
+        dtuip_group_id
+    </sql>
+
+    <sql id="Common_Column_List">
+        t1
+        .
+        id
+        ,
+        t1.create_by,
+        t1.create_time,
+        t1.update_by,
+        t1.update_time,
+        t1.status,
+        t1.reversion,
+        t1.is_reserved,
+        t1.ranking,
+        t1.device_name,
+        t1.device_no,
+        t1.group_id,
+        t1.organization_id,
+        t1.dtuip_create_date,
+        t1.dtuip_default_timescale,
+        t1.dtuip_ioc_url,
+        t1.dtuip_is_alarms,
+        t1.dtuip_is_delete,
+        t1.dtuip_is_line,
+        t1.dtuip_lat,
+        t1.dtuip_lng,
+        t1.dtuip_linktype,
+        t1.dtuip_user_id,
+        t1.dtuip_user_name,
+        t1.dtuip_id,
+        t1.dtuip_product_id,
+        t1.dtuip_product_type,
+        t1.dtuip_protocol_label,
+        t1.dtuip_remark,
+        t1.dtuip_time_zone,
+        t1.dtuip_group_id
+    </sql>
+
+    <select id="selectExtPage" resultMap="ExtResultMap">
+        SELECT
+        <include refid="Common_Column_List"/>
+        FROM biz_device t1 LEFT JOIN sys_organization t2 on t1.organization_id=t2.id
+        <where>
+            <if test="param.groupId != null and param.groupId !=''">
+                and t1.group_id =#{param.groupId}
+            </if>
+            <if test="param.orgName != null and param.orgName !=''">
+                and t2.organization_name =#{param.orgName}
+            </if>
+            <if test="param.deviceName!=null and param.deviceName!=''">
+                and t1.device_name like concat('%', #{param.deviceName}, '%')
+            </if>
+            <if test="param.deviceNo!=null and param.deviceNo!=''">
+                and t1.device_no like concat('%', #{param.deviceNo}, '%')
+            </if>
+            <if test="param.dtuipIsAlarms != null">
+                and t1.dtuip_is_alarms = #{param.dtuipIsAlarms}
+            </if>
+            <if test="param.dtuipIsLine != null">
+                and t1.dtuip_is_line = #{param.dtuipIsLine}
+            </if>
+            <if test="param.status != null">
+                and t1.status = #{param.status}
+            </if>
+            <if test="param.startDate != null">
+                and DATE_FORMAT(t1.dtuip_create_date,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+            </if>
+            <if test="param.endDate != null">
+                and DATE_FORMAT(t1.dtuip_create_date,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.eupLoadEndDate},'%Y-%m-%d')
+            </if>
+            <if test="param.organizationId != null and param.organizationId!=''">
+                and t1.organization_id = #{param.organizationId}
+            </if>
+        </where>
+        order by t1.dtuip_create_date desc
+    </select>
+
+    <select id="getherOne" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.Gather">
+        SELECT
+        organization.organization_name orgName,
+        count( organization.id ) deviceSum,
+        organization.id organizationId
+        FROM
+        biz_device device
+        INNER JOIN sys_organization organization ON device.organization_id = organization.id
+        WHERE 1=1
+        <if test="organizationId!=null and organizationId!=''">
+            organization.id=#{organizationId}
+        </if>
+        GROUP BY organization.organization_name
+    </select>
+    <select id="getherTwo" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
+        SELECT gas_name,
+               gas_type,
+               count(sensor.id) sensorSum
+        FROM biz_device_sensor sensor
+                 INNER JOIN biz_device device on sensor.device_id = device.id
+        WHERE device.organization_id = #{organizationId}
+        GROUP BY gas_name, gas_type
+    </select>
+    <select id="getherThree" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
+        SELECT count(1) traceSum,
+               sensor.sensor_name
+        FROM biz_device device
+                 INNER JOIN biz_device_sensor sensor ON sensor.device_id = device.id
+                 INNER JOIN biz_device_sensor_trace trace ON sensor.id = trace.sensor_id
+        WHERE device.organization_id = #{organizationId}
+        GROUP BY sensor.id
+    </select>
+    <select id="getherFour" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
+        SELECT count(1) alarmSum,
+               sensor.sensor_name
+        FROM biz_data_alarm alarm
+                 INNER JOIN biz_device_sensor sensor on alarm.sensor_id = sensor.id
+                 INNER JOIN biz_workflow_alarm_deal_record record on record.device_alarm_id = alarm.id
+                 INNER JOIN biz_device device ON sensor.device_id = device.id
+        WHERE device.organization_id = #{organizationId}
+        GROUP BY sensor.id
+    </select>
+    <select id="getherFive" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
+        SELECT count(1) maintSum,
+               sensor.sensor_name
+        FROM biz_workflow_device_maint_record record
+                 INNER JOIN biz_workflow_device_maint_plan_sensor plan ON plan.plan_id = record.device_maint_id
+            OR plan.plan_id = record.id
+                 INNER JOIN biz_device_sensor sensor ON plan.sensor_id = sensor.id
+                 INNER JOIN biz_device device ON sensor.device_id = device.id
+        WHERE device.organization_id = #{organizationId}
+        GROUP BY sensor.id
+    </select>
+
+    <select id="getOrgCount" resultType="java.lang.Integer">
+        select COUNT(1)
+        from (SELECT COUNT(1)
+        FROM biz_device_sensor device
+        INNER JOIN sys_organization organization ON device.organization_id = organization.id
+        WHERE 1=1
+        <if test="param.startDate != null">
+            and DATE_FORMAT(organization.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(organization.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+        GROUP BY organization.id) a
+    </select>
+
+    <select id="getSensor" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN sys_organization sys ON sys.id = sensor.organization_id
+        WHERE 1=1
+        <if test="param.startDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="getGasTypeCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor
+        WHERE gas_type=#{type}
+        <if test="param.startDate != null">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+
+    </select>
+    <select id="getMaintRecordCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN biz_workflow_device_maint_plan_sensor plan on sensor.id = plan.sensor_id
+        WHERE 1=1
+        <if test="param.startDate != null">
+            and DATE_FORMAT(plan.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(plan.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getRecordCount" resultType="java.lang.Integer">
+        SELECT
+        count( 1 )
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN biz_data_alarm alarm ON sensor.id = alarm.sensor_id
+        INNER JOIN biz_workflow_alarm_deal_record record on record.alarm_sn_no=alarm.alarm_sn_no
+        WHERE
+        1 =1
+        <if test="param.startDate != null">
+            and DATE_FORMAT(record.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(record.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getGasName" resultType="java.lang.String">
+        SELECT
+        gas_name
+        FROM
+        biz_device_sensor
+        where gas_name is not null
+        <if test="param.startDate != null">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+        GROUP BY
+        gas_name
+    </select>
+    <select id="getOrgName" resultType="java.lang.String">
+        SELECT
+        organization.organization_name
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN sys_organization organization on sensor.organization_id = organization.id
+        where 1=1
+        <if test="param.startDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+        GROUP BY organization_name
+    </select>
+    <select id="getGasCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN sys_organization organization on sensor.organization_id = organization.id
+        where sensor.gas_name =#{gasName}
+        and organization.organization_name=#{orgName}
+        <if test="param.startDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(sensor.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="getAlarmList" resultType="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        SELECT
+        record.id recordId,
+        alarm.dtuip_trigger_date,
+        sensor.location_no,
+        region.region_name,
+        record.event_status,
+        sys.organization_name
+        FROM
+        biz_data_alarm alarm
+        INNER JOIN biz_device_sensor sensor ON alarm.sensor_id = sensor.id
+        INNER JOIN biz_workflow_alarm_deal_record record on record.alarm_sn_no=alarm.alarm_sn_no
+        LEFT JOIN sys_organization sys ON sys.id = sensor.organization_id
+        LEFT JOIN biz_install_region region ON region.id = sensor.region_id
+        where 1=1
+
+        <if test="param.id != null and param.id!=''">
+            and alarm.organization_id = #{param.id}
+        </if>
+        <if test="param.startDate != null">
+            and DATE_FORMAT(alarm.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(alarm.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getMainList" resultType="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        SELECT
+        record.id recordId,
+        record.event_status,
+        sensor.sensor_name,
+        sensor.location_no,
+        region.region_name,
+        sys.organization_name,
+        record.create_time
+        FROM
+        biz_device_sensor sensor
+        INNER JOIN biz_workflow_device_maint_plan_sensor plan ON sensor.id = plan.sensor_id
+        left JOIN biz_workflow_device_maint_record record ON record.id = plan.plan_id
+        INNER JOIN biz_install_region region ON region.id = sensor.region_id
+        INNER JOIN sys_organization sys on sys.id = sensor.organization_id
+        where 1=1
+        <if test="param.id != null and param.id!=''">
+            and sensor.organization_id = #{param.id}
+        </if>
+        <if test="param.startDate != null">
+            and DATE_FORMAT(record.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(record.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getTraceCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor_trace trace
+        INNER JOIN biz_device_sensor sensor on sensor.id = trace.sensor_id
+        INNER JOIN biz_device_group g on g.organization_id = sensor.organization_id
+        INNER JOIN sys_organization s on s.id = g.organization_id
+        WHERE 1=1
+        <if test="param.endDate != null">
+            and DATE_FORMAT(trace.actual_expiration_date,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getTraceaList" resultType="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        SELECT
+        sys.id organizationId,
+        trace.id,
+        sys.organization_name,
+        count(1) as qty,
+        max(datediff(now(),trace.actual_expiration_date)) maxDate
+        FROM
+        biz_device_sensor_trace trace
+        INNER JOIN biz_device_sensor sensor on sensor.id = trace.sensor_id
+        INNER JOIN biz_device device on device.id=sensor.device_id
+        INNER JOIN sys_organization sys on sys.id=device.organization_id
+        WHERE 1=1
+        <if test="param.endDate != null">
+            and DATE_FORMAT(trace.actual_expiration_date,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+        GROUP BY sys.organization_name
+        ORDER BY qty desc
+    </select>
+    <select id="getTraceaItem" resultType="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        SELECT
+        sensor.location_no,
+        region.region_name,
+        trace.id,
+        sys.organization_name,
+        datediff(now(),trace.actual_expiration_date) maxDate
+        FROM
+        biz_device_sensor_trace trace
+        INNER JOIN biz_device_sensor sensor on sensor.id = trace.sensor_id
+        INNER JOIN sys_organization sys on sys.id=sensor.organization_id
+        left JOIN biz_install_region region on region.id = sensor.region_id
+        WHERE 1=1
+        <if test="id!=null and id !=''">
+            and sys.id=#{id}
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(trace.actual_expiration_date,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+        ORDER BY maxDate desc
+    </select>
+    <select id="getChangeCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor_change t1
+        INNER JOIN biz_device_sensor t2 ON t1.sensor_id = t2.id
+        INNER JOIN sys_organization sys ON sys.id = t2.organization_id
+        left JOIN biz_install_region region on region.id = t2.region_id
+        WHERE 1=1 and t1.change_type=#{type}
+        <if test="param.startDate != null">
+            and DATE_FORMAT(t1.change_date,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(t1.change_date,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+    <select id="getOverdueCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        biz_device_sensor_trace trace
+        INNER JOIN biz_device_sensor sensor ON trace.sensor_id = sensor.id
+        INNER JOIN sys_organization sys ON sys.id = sensor.organization_id
+        WHERE 1=1
+        <if test="param.fig!=null and param.fig!='' and param.fig=='1'.toString()">
+            <if test="param.startDate != null">
+                and DATE_FORMAT(trace.actual_expiration_date,'%Y-%m-%d') >DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+            </if>
+        </if>
+        <if test="param.fig!=null and param.fig!='' and param.fig=='2'.toString()">
+            <if test="param.startDate != null">
+                and DATE_FORMAT(trace.actual_expiration_date,'%Y-%m-%d') &lt;DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+            </if>
+        </if>
+    </select>
+
+    <select id="getGasTypeList" resultType="cn.ltit.bigfish.daheng.core.device.model.entity.BizDevice">
+        SELECT
+        t2.*,
+        region.region_name,
+        sys.organization_name
+        FROM
+        biz_device_sensor_change t1
+        INNER JOIN biz_device_sensor t2 ON t1.sensor_id = t2.id
+        INNER JOIN sys_organization sys ON sys.id = t2.organization_id
+        left JOIN biz_install_region region on region.id = t2.region_id
+        WHERE 1=1 and t1.change_type=#{type}
+        <if test="param.id != null and param.id!=''">
+            and t2.organization_id = #{param.id}
+        </if>
+        <if test="param.startDate != null">
+            and DATE_FORMAT(t2.create_time,'%Y-%m-%d') >=DATE_FORMAT(#{param.startDate},'%Y-%m-%d')
+        </if>
+        <if test="param.endDate != null">
+            and DATE_FORMAT(t2.create_time,'%Y-%m-%d') &lt;=DATE_FORMAT(#{param.endDate},'%Y-%m-%d')
+        </if>
+    </select>
+</mapper>
+```
+
 ## Questions
 

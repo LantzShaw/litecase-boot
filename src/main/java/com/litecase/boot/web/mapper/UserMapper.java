@@ -16,4 +16,7 @@ public interface UserMapper extends BaseMapper<User> {
     User getUserById(@Param("id") String id);
 
     void addUser(@Param("User") User user);
+
+
+    User findUserById(String id);
 }
