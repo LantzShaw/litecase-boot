@@ -18,15 +18,15 @@ public class MyTask implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.addTriggerTask(() -> process(), triggerContext -> {
-            String cron = cronMapper.getCronById("14");
-
-            if(cron.isEmpty()) {
-                System.out.println("cron is null");
-            }
-
-            return new CronTrigger(cron).nextExecution(triggerContext);
-        });
+//        taskRegistrar.addTriggerTask(() -> process(), triggerContext -> {
+//            String cron = cronMapper.getCronById("14");
+//
+//            if(cron.isEmpty()) {
+//                System.out.println("cron is null");
+//            }
+//
+//            return new CronTrigger(cron).nextExecution(triggerContext);
+//        });
     }
 
     private void process() {

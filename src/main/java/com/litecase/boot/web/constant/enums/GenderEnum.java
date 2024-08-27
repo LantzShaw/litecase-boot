@@ -1,6 +1,7 @@
 package com.litecase.boot.web.constant.enums;
 
 public enum GenderEnum {
+    // NOTE: 只能大写，且多个单词通过"_"连接
     FEMALE("2", "女"),
     MALE("1", "男");
 

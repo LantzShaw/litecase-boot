@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 // @Scheduled执行周期任务会受到上次一个任务的执行时间影响。那么可以开启多线程执行周期任务。
 @EnableAsync // 开启多线程
 @Component
-@EnableScheduling
+//@EnableScheduling
 public class MultiThreadTask {
     @Async
     @Scheduled(fixedDelay = 1000) // 间隔1秒
