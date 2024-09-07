@@ -13,10 +13,17 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
     List<User> getUsers();
 
-    User getUserById(@Param("id") String id);
+    User getUserById(@Param("userId") String userId);
+
+    /**
+     *  查询用户名是否存在
+     *
+     * @param username
+     * @return
+     */
+    User findByUsername(@Param("username") String username);
 
     void addUser(@Param("User") User user);
 
-
-    User findUserById(String id);
+    User findUserById(String userId);
 }

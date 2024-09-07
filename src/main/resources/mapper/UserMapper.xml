@@ -4,7 +4,7 @@
 <!-- 上面是头部命名空间 -->
 <mapper namespace="com.litecase.boot.web.mapper.UserMapper"> <!--对应的mapper类的包路径-->
     <resultMap id="baseResultMap" type="com.litecase.boot.web.model.entity.User"> <!--返回查询结果对应的实体类-->
-        <id column="id" property="id"/> <!--这里的id代表主键-->
+        <id column="userId" property="userId"/> <!--这里的id代表主键-->
         <result column="username" property="username"/>
         <result column="nickname" property="nickname" />
         <result column="gender" property="gender"/>
@@ -12,18 +12,32 @@
         <result column="phone_number" property="phoneNumber" />
         <result column="avatar" property="avatar" />
         <result column="email" property="email" />
-        <result column="id_number" property="idMumber" />
+        <result column="identity_number" property="identityNumber" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id
-        , username, gender,  age
+        userId, username, nickname, gender, age, avatar,
+        phone_number, email, identity_number, status, create_time,
+        update_time, created_by, updated_by
     </sql>
     <select id="selectAll" resultMap="baseResultMap">
         select
         <include refid="Base_Column_List"/>
         from user;
     </select>
+
+    <select id="findByUsername" resultMap="baseResultMap">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM user
+        WHERE username = #{username}
+    </select>
+
     <insert id="addUser">
         INSERT INTO user (id, username, gender, age)
         VALUES (#{User.username}, #{User.gender}, #{User.age})

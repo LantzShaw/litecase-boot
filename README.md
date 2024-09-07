@@ -43,6 +43,162 @@ Integer的默认值是null；int的默认值是0。
 # 参考文章: https://blog.csdn.net/chenliguan/article/details/53888018
 ```
 
+**entity中为什么要设置serialVersionUID**
+
+在 Java 中，`serialVersionUID` 是一个用于序列化和反序列化的版本控制标识符。它主要用于确保在反序列化过程中，反序列化的类版本与序列化时的类版本一致。
+
+以下是 `serialVersionUID` 的一些主要作用和原因：
+
+1. **版本控制**：当一个类被序列化后，它的状态被保存到一个字节流中。`serialVersionUID` 是一个唯一标识符，用于验证序列化的对象与当前的类定义是否兼容。如果类的定义发生了变化（例如添加了新字段或方法），而没有更新 `serialVersionUID`，则可能导致反序列化失败或抛出 `InvalidClassException`。
+
+2. **确保兼容性**：通过显式声明 `serialVersionUID`，可以确保序列化和反序列化过程中类版本的一致性。这对于在不同版本的应用程序中传输对象非常重要。
+
+3. **提高性能**：`serialVersionUID` 可以提高反序列化过程的性能，因为它允许 JVM 在反序列化时快速检查类的版本。
+
+4. **避免默认生成**：如果类中没有声明 `serialVersionUID`，Java 序列化机制会根据类的结构自动生成一个默认的 `serialVersionUID`。这可能会因为类的细微变化（如编译器的版本）而不同，从而导致不必要的序列化问题。
+
+在你的 Java Spring 应用中，通常在实现 `Serializable` 接口的类中，会设置 `private static final long serialVersionUID = 1L;`，这样可以确保当类的结构发生变化时，能够明确知道版本的兼容性。
+
+举个例子：
+
+```java
+import java.io.Serializable;
+
+public class MyClass implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private String name;
+    private int age;
+    
+    // getters and setters
+}
+```
+
+在这个例子中，`serialVersionUID` 是 `1L`，表示这是类的第一个版本。如果将来对 `MyClass` 进行更改（如添加字段），可以更新 `serialVersionUID` 的值，以指示类的版本已经变化。
+
+**类似UserMapper.xml中，使用@Param("username") String username，使用@Param的意义**
+```text
+在 MyBatis 中，`@Param` 注解用于给 SQL 查询中的参数命名。当一个方法有多个参数或者需要为单个参数提供更明确的名称时，可以使用 `@Param` 注解。这个注解的作用是将 Java 方法的参数与 SQL 语句中的占位符进行绑定。
+
+具体来说，`@Param("username") String username` 的意思是：
+
+1. **命名参数**：在 SQL 语句中可以使用 `#{username}` 来引用传递的参数，而不需要依赖方法参数的名称。这在 SQL 语句中可以使得参数更加明确，尤其是当方法中有多个参数时。
+   
+2. **多参数的支持**：MyBatis 默认会根据方法参数的顺序匹配。如果方法有多个参数，MyBatis 需要知道如何将这些参数映射到 SQL 语句中。而通过 `@Param` 注解，可以明确地指定参数名称，以便在 SQL 语句中使用它。
+
+### 示例说明
+
+假设有一个 `findByUsername` 的方法，用于通过用户名查找用户。在 `UserMapper` 接口中，我们可以这样定义方法：
+
+import org.apache.ibatis.annotations.Param;
+
+public interface UserMapper {
+    User findByUsername(@Param("username") String username);
+}
+
+`@Param("username")` 的作用是将传入的 `username` 参数绑定到 SQL 中的 `#{username}` 占位符上。这样在 XML 映射文件中可以通过 `#{username}` 来引用这个参数。
+
+### 对应的 `UserMapper.xml`：
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-mapper-3.0.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+
+    <!-- 查询用户通过用户名 -->
+    <select id="findByUsername" parameterType="String" resultType="com.example.entity.User">
+        SELECT *
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+</mapper>
+
+### 作用场景
+
+1. **多参数场景**：如果有多个参数，`@Param` 显得更加重要。例如：
+
+   public interface UserMapper {
+       User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+   }
+
+   在对应的 SQL 中：
+
+   <select id="findByUsernameAndPassword" resultType="com.example.entity.User">
+       SELECT *
+       FROM user
+       WHERE username = #{username} AND password = #{password}
+   </select>
+
+   这样，MyBatis 就可以根据 `@Param` 注解，将方法的 `username` 和 `password` 参数正确映射到 SQL 语句的 `#{username}` 和 `#{password}` 中。
+
+2. **避免参数名冲突**：如果方法参数的名字与 SQL 中的列名或关键词相同，`@Param` 可以避免冲突，确保参数正确映射。
+
+总的来说，`@Param("...")` 的主要作用就是为 SQL 语句中的参数提供一个明确的名称，并确保多个参数能够正确地绑定到 SQL 语句中。
+```
+**可以不使用@Param可以吗**
+```text
+可以在 MyBatis 中不使用 `@Param` 注解，但这取决于具体的场景和需求。如果不使用 `@Param` 注解，MyBatis 默认会按照 **方法参数的顺序** 来处理 SQL 中的参数绑定。如果只有一个参数或者方法的参数数量较少且顺序明确，不使用 `@Param` 是可以的。
+
+### 示例：不使用 `@Param` 的情况
+
+#### 1. 单个参数
+
+如果方法只接受一个参数，MyBatis 可以自动匹配参数，因此不需要 `@Param` 注解。例如：
+
+public interface UserMapper {
+    User findByUsername(String username);
+}
+
+对应的 XML 映射文件：
+
+<select id="findByUsername" parameterType="String" resultType="com.example.entity.User">
+    SELECT *
+    FROM user
+    WHERE username = #{username}
+</select>
+
+在这种情况下，MyBatis 会自动将方法的 `username` 参数映射到 SQL 语句中的 `#{username}` 占位符。
+
+#### 2. 多个参数（不使用 `@Param`）
+
+如果方法有多个参数而不使用 `@Param` 注解，MyBatis 会使用参数的默认名称 `arg0`、`arg1`、`arg2` 等来匹配 SQL 中的参数。此时，SQL 语句中的占位符必须使用这些默认名称。
+
+例如：
+
+public interface UserMapper {
+    User findByUsernameAndPassword(String username, String password);
+}
+
+对应的 XML 映射文件：
+
+<select id="findByUsernameAndPassword" resultType="com.example.entity.User">
+    SELECT *
+    FROM user
+    WHERE username = #{arg0} AND password = #{arg1}
+</select>
+
+- `arg0` 代表方法的第一个参数 `username`。
+- `arg1` 代表方法的第二个参数 `password`。
+
+#### 3. 不推荐的情况
+
+虽然不使用 `@Param` 可以工作，但在多个参数的场景下不推荐这样做，因为：
+
+- **可读性差**：`arg0`、`arg1` 这样的命名方式不直观，难以维护和理解。
+- **容易出错**：如果方法参数的顺序发生变化，SQL 语句中的参数绑定也需要随之调整，增加了出错的可能性。
+
+### 使用 `@Param` 的优点
+
+- **明确的参数命名**：可以通过名字直接引用参数，如 `#{username}` 和 `#{password}`，使 SQL 更易于理解和维护。
+- **灵活性**：在复杂查询或者动态 SQL 语句中，`@Param` 可以提供更大的灵活性，避免依赖参数的顺序。
+
+### 总结
+
+- **可以不使用 `@Param`**，但仅限于参数较少的场景，且需要按照参数的顺序来引用（使用 `arg0`, `arg1` 等）。
+- **推荐使用 `@Param`** 尤其是在有多个参数或方法签名复杂的情况下，这样能够提高代码的可读性和维护性。
+```
+
 **application.properties和application.yml文件的区别**
 
 ```text
@@ -1079,3 +1235,255 @@ BizDeviceMapper.xml
 
 ## Questions
 
+**为什么不推荐使用@Autowired注解，而推荐使用@Resource注解，或者使用构造函数+setter注入？**
+在 Spring 框架中，`@Autowired` 注解广泛用于自动注入依赖，但在一些场景下并不推荐直接使用 `@Autowired`，尤其是在构造函数注入中。以下是一些不推荐使用 `@Autowired` 的原因，以及一些更好的替代方案。
+
+### 1. **构造函数注入更安全、明确**
+
+使用 `@Autowired` 注解进行字段注入会让类的依赖关系不够显式，尤其是在类的构造函数中没有明确传入依赖对象时，可能会导致代码的可测试性和可维护性降低。
+
+#### 问题：
+- **依赖隐藏**：依赖关系直接注入到类的字段中，依赖不通过构造函数传入，外部难以知道这个类依赖了哪些组件。
+- **不利于测试**：在单元测试中，字段注入使得模拟对象或手动注入依赖变得困难，因为字段无法通过构造函数传入。
+- **不适用于不可变对象**：字段注入后依赖的对象可能会在运行时被替换或改变，导致对象状态不再不可变。
+
+#### 推荐方式：
+使用 **构造函数注入** 更明确、更安全，特别是对于类的依赖关系，构造函数注入可以避免上面的问题。
+
+```java
+public class MyService {
+
+    private final MyDependency myDependency;
+
+    // 构造函数注入
+    public MyService(MyDependency myDependency) {
+        this.myDependency = myDependency;
+    }
+}
+```
+
+- **优点**：构造函数注入会让依赖关系更加明确，且不需要额外的注解，如 `@Autowired`。
+- **强制依赖声明**：所有依赖项都通过构造函数传递，使得类的依赖一目了然，无法省略，避免隐式注入。
+
+从 Spring 4.3 开始，如果只有一个构造函数，可以省略 `@Autowired`，Spring 会自动注入依赖。
+
+### 2. **字段注入使代码不够灵活**
+
+字段注入使得依赖的字段直接被注入，但在某些场景下，例如需要延迟初始化或重写依赖时，字段注入显得不够灵活。构造函数或 setter 注入则更灵活，可以提供更多控制。
+
+#### 示例：字段注入（不推荐）
+```java
+public class MyService {
+
+    @Autowired
+    private MyDependency myDependency;
+
+    // 不灵活，无法延迟或改变依赖注入的行为
+}
+```
+
+#### 推荐方式：构造函数注入或 setter 注入
+```java
+public class MyService {
+
+    private final MyDependency myDependency;
+
+    public MyService(MyDependency myDependency) {
+        this.myDependency = myDependency;
+    }
+
+    // 或者使用 setter 注入来控制依赖注入的时机
+    @Autowired
+    public void setMyDependency(MyDependency myDependency) {
+        this.myDependency = myDependency;
+    }
+}
+```
+
+- **构造函数注入**：更加灵活，不会遇到循环依赖问题。
+- **setter 注入**：允许依赖项在运行时修改或延迟注入，适合有时依赖不一定需要立刻注入的情况。
+
+### 3. **代码的可测试性**
+
+使用 `@Autowired` 注入字段时，测试类的依赖变得困难，因为无法在测试中轻松模拟或传递依赖项。构造函数注入可以通过测试框架如 JUnit 或 Mockito 轻松创建对象并传递 mock 依赖项。
+
+#### 示例：构造函数注入提高测试性
+
+```java
+public class MyServiceTest {
+
+    @Test
+    public void testMyService() {
+        MyDependency mockDependency = mock(MyDependency.class);
+        MyService myService = new MyService(mockDependency);  // 手动注入依赖
+
+        // 测试逻辑...
+    }
+}
+```
+
+构造函数注入让测试类变得简单，容易进行依赖的模拟和注入。
+
+### 4. **避免循环依赖**
+
+字段注入在某些情况下会导致 **循环依赖** 问题，比如两个类相互依赖时，Spring 容器可能无法正常解析。这种情况下，构造函数注入可以帮助更清晰地识别和解决循环依赖。
+
+```java
+public class A {
+    @Autowired
+    private B b;
+}
+
+public class B {
+    @Autowired
+    private A a;
+}
+```
+
+- 如果使用字段注入，很容易产生循环依赖的错误。
+- 使用构造函数注入时，Spring 会更容易识别和解决循环依赖问题，因为依赖项在构造时已经明确。
+
+### 5. **不使用 `@Autowired` 的替代方案**
+
+- **构造函数注入**：这是最推荐的方式，尤其是在使用 Spring 4.3 及以上版本时，Spring 会自动识别构造函数注入，无需 `@Autowired` 注解。
+
+- **Setter 注入**：在某些情况下，如果依赖项不是必须的或者需要延迟注入，可以使用 `setter` 方法配合 `@Autowired` 注解。
+
+- **配置类中手动注入**：在 `@Configuration` 类中，可以手动配置和注入依赖项。
+
+#### 示例：手动注入依赖
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService(MyDependency myDependency) {
+        return new MyService(myDependency);
+    }
+
+    @Bean
+    public MyDependency myDependency() {
+        return new MyDependency();
+    }
+}
+```
+
+### 总结
+
+- **字段注入**（使用 `@Autowired`）虽然简单，但会隐藏依赖关系，导致测试、维护和可读性的问题。
+- **构造函数注入** 是更推荐的方式，尤其是当依赖明确且必需时，它能让依赖关系更加清晰，避免循环依赖，并提高代码的可测试性。
+- **setter 注入** 可以用于需要延迟或可选的依赖注入场景。
+
+因此，除非有特殊需求（如延迟初始化或可选依赖），构造函数注入是比 `@Autowired` 字段注入更好的选择。
+
+
+**filter中如何注入util类**
+
+在 Spring Boot 的 `Filter` 中，注入 `Util` 类或 Spring 管理的其他 Bean 可以通过以下几种方式实现。由于 `Filter` 本身并不是由 Spring 管理的组件，因此不能直接使用常规的 `@Autowired` 方式，但我们可以通过其他方法使其获得 Spring 容器中的 Bean。
+
+### 1. 使用 `@Component` 注册 `Filter`
+可以将 `Filter` 声明为一个 Spring 管理的 Bean，这样可以直接通过 `@Autowired` 注入依赖。示例如下：
+
+#### 代码示例：
+
+##### 1.1 创建 `JwtUtils` 工具类：
+```java
+@Component
+public class JwtUtils {
+    public String generateToken(String username) {
+        // 假设这里是生成 JWT 的逻辑
+        return "generated-jwt-token";
+    }
+}
+```
+
+##### 1.2 创建自定义 `Filter` 并注入 `JwtUtils`：
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+@Component
+public class JwtAuthenticationFilter implements Filter {
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String token = httpRequest.getHeader("Authorization");
+
+        if (token != null && !token.isEmpty()) {
+            // 使用注入的工具类进行处理
+            String username = jwtUtils.generateToken("test-user");
+            System.out.println("Generated Token: " + username);
+        }
+
+        chain.doFilter(request, response);
+    }
+}
+```
+
+##### 1.3 注册 `Filter`：
+使用 `@Component` 将 `Filter` 注册到 Spring 容器，Spring 会自动管理 `Filter` 并将其应用到请求中。
+
+### 2. 使用 `FilterRegistrationBean` 手动注册 `Filter`
+如果你不想通过 `@Component` 自动扫描方式来注册 `Filter`，可以通过 `FilterRegistrationBean` 在配置类中手动注册 `Filter`，并将 `Util` 类注入。
+
+#### 代码示例：
+
+##### 2.1 自定义 `JwtAuthenticationFilter`：
+```java
+public class JwtAuthenticationFilter implements Filter {
+
+    private final JwtUtils jwtUtils;
+
+    // 通过构造函数注入 JwtUtils
+    public JwtAuthenticationFilter(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String token = httpRequest.getHeader("Authorization");
+
+        if (token != null && !token.isEmpty()) {
+            // 使用注入的工具类
+            String username = jwtUtils.generateToken("test-user");
+            System.out.println("Generated Token: " + username);
+        }
+
+        chain.doFilter(request, response);
+    }
+}
+```
+
+##### 2.2 在配置类中注册 `Filter`：
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
+@Configuration
+public class FilterConfig {
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthenticationFilter(JwtUtils jwtUtils) {
+        FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new JwtAuthenticationFilter(jwtUtils));
+        registrationBean.addUrlPatterns("/api/*"); // 过滤特定路径
+        return registrationBean;
+    }
+}
+```
+
+### 总结：
+- **方式1**：使用 `@Component` 将 `Filter` 注册到 Spring 容器，并通过 `@Autowired` 注入工具类。
+- **方式2**：使用 `FilterRegistrationBean` 手动注册 `Filter`，通过构造函数注入工具类。
+
+这两种方式都能让 `Filter` 正常使用 Spring 管理的 Bean，例如 `JwtUtils` 等。

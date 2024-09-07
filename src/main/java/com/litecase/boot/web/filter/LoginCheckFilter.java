@@ -3,29 +3,42 @@ package com.litecase.boot.web.filter;
 import com.alibaba.fastjson2.JSON;
 import com.litecase.boot.web.common.BaseContext;
 import com.litecase.boot.web.common.R;
+import com.litecase.boot.web.util.JwtUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.yaml.snakeyaml.scanner.Scanner;
 
 import java.io.IOException;
 
 // NOTE: 需要在启动类中添加@ComponentScan注解
 
 @Slf4j
+@Component
 @WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
+    // 使用Autowired需要将当前类设置为Spring 容器，可以使用@Component 或者@Bean
+    @Autowired
+    JwtUtil jwtUtil;
+
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    // HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+    // HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String requestURI = request.getRequestURI();
+        String authorazationHeader = request.getHeader("Authorization");
+
 
         // 不需要处理请求
         String[] urls = new String[] {
@@ -39,6 +52,20 @@ public class LoginCheckFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
+
+        if(authorazationHeader == null || !authorazationHeader.startsWith("Bearer ")
+        || authorazationHeader.split(" ")[1].isEmpty()) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid token");
+        }
+
+        String token = authorazationHeader.split(" ")[1];
+        // String token = authorazationHeader.substring(7);
+
+        if(jwtUtil.isTokenExpired(token)) {
+
+        }
+
+
 
         if(request.getSession().getAttribute("employee") != null) {
             Long employeeId = (Long) request.getSession().getAttribute("employee");
