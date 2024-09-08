@@ -19,29 +19,23 @@ import java.io.IOException;
 // NOTE: 需要在启动类中添加@ComponentScan注解
 
 @Slf4j
-@Component
-@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
+// @Component
+//@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
-    // 使用Autowired需要将当前类设置为Spring 容器，可以使用@Component 或者@Bean
-    @Autowired
-    JwtUtil jwtUtil;
-
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-    // HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-    // HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+        // HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+        // HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String requestURI = request.getRequestURI();
-        String authorazationHeader = request.getHeader("Authorization");
-
 
         // 不需要处理请求
-        String[] urls = new String[] {
+        String[] urls = new String[]{
                 "/employee/login",
                 "/employee/logout"
         };
@@ -53,21 +47,7 @@ public class LoginCheckFilter implements Filter {
             return;
         }
 
-        if(authorazationHeader == null || !authorazationHeader.startsWith("Bearer ")
-        || authorazationHeader.split(" ")[1].isEmpty()) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "invalid token");
-        }
-
-        String token = authorazationHeader.split(" ")[1];
-        // String token = authorazationHeader.substring(7);
-
-        if(jwtUtil.isTokenExpired(token)) {
-
-        }
-
-
-
-        if(request.getSession().getAttribute("employee") != null) {
+        if (request.getSession().getAttribute("employee") != null) {
             Long employeeId = (Long) request.getSession().getAttribute("employee");
 
             BaseContext.setCurrentId(employeeId);

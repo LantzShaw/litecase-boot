@@ -1,14 +1,17 @@
 package com.litecase.boot.web.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.litecase.boot.web.model.entity.User;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecureDigestAlgorithm;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +21,7 @@ import java.util.UUID;
  * https://blog.csdn.net/qq_50969362/article/details/134100542
  * https://jwt.io/
  */
+@Slf4j
 @Component
 public class JwtUtil {
     /**
@@ -25,14 +29,14 @@ public class JwtUtil {
      */
     private static final long ACCESS_EXPIRE = 60 * 60 * 1000; // 1 hour
 
-    private static  final SecureDigestAlgorithm<SecretKey, SecretKey> ALGORITHM = Jwts.SIG.HS256;
+    private static final SecureDigestAlgorithm<SecretKey, SecretKey> ALGORITHM = Jwts.SIG.HS256;
 
     /**
      * 私钥 / 生成签名的时候使用的秘钥secret，一般可以从本地配置文件中读取，切记这个秘钥不能外露，只在服务端使用，在任何场景都不应该流露出去。
      * 一旦客户端得知这个secret, 那就意味着客户端是可以自我签发jwt了。
      * 应该大于等于 256位(长度32及以上的字符串)，并且是随机的字符串
      */
-    private  static final String SECRET = "secret";
+    private static final String SECRET = "secret";
 
     /**
      * 秘钥实例
@@ -42,12 +46,12 @@ public class JwtUtil {
     /**
      * jwt主题
      */
-    private static final  String JWT_SUBJECT = "subject";
+    private static final String JWT_SUBJECT = "subject";
 
     /**
      * jwt签发者
      */
-    private static final   String JWT_ISSUER = "issuer";
+    private static final String JWT_ISSUER = "issuer";
 
     public String generateToken(String username) {
         String uuid = UUID.randomUUID().toString();
@@ -55,7 +59,7 @@ public class JwtUtil {
 
         // Date exprireDate = new Date(now.getTime() + ACCESS_EXPIRE);
 
-        return Jwts.builder().header().add("typ","JWT").add("alg","HS256").and().claim("username", username)
+        return Jwts.builder().header().add("typ", "JWT").add("alg", "HS256").and().claim("username", username)
                 .id(uuid)
                 .expiration(exprireDate)
                 .issuedAt(new Date())
@@ -65,7 +69,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 从 token 中解析出 Claims（声明）
+    /**
+     * 从 token 中解析出 Claims（声明）
+     *
+     * @param token
+     * @return
+     */
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(SECRET_KEY)
@@ -86,8 +95,58 @@ public class JwtUtil {
      * @param username
      * @return
      */
-    public  boolean validateToken(String token, String username) {
-        return extractUsername(token).equals(username);
+//    public  boolean validateToken(String token, String username) {
+//        try {
+//            String tokenUsername = extractUsername(token);
+//
+//            if(!username.equals(tokenUsername)) {
+//                return false;
+//            }
+//
+//            return !isTokenExpired(token);
+//
+//            // return extractUsername(token).equals(username);
+//            // return (username.equals(tokenUsername) && !isTokenExpired(token));
+//
+//        } catch (SignatureException | ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+//            return false;
+//        }
+//    }
+
+    /**
+     * 验证Token是否有效
+     *
+     * @param token
+     * @param username
+     * @return
+     */
+    public boolean validateToken(String token, String username) {
+        try {
+            String tokenUsername = extractUsername(token);
+
+            if (!username.equals(tokenUsername)) {
+                return false;
+            }
+
+            return !isTokenExpired(token);
+        } catch (SignatureException e) {
+            // 签名不匹配或无效
+            log.info("Invalid JWT signature.");
+        } catch (MalformedJwtException e) {
+            // JWT格式不正确
+            log.info("Invalid JWT token.");
+        } catch (ExpiredJwtException e) {
+            // JWT已过期
+            log.info("Expired JWT token.");
+        } catch (IllegalArgumentException e) {
+            // JWT为空或为null
+            log.info("JWT claims string is empty.");
+        } catch (UnsupportedJwtException e) {
+            // JWT令牌不支持
+            log.info("JWT token is unsupported.");
+        }
+
+        return false;
     }
 
     /**
@@ -108,6 +167,28 @@ public class JwtUtil {
      */
     public String extractUsername(String token) {
         return extractClaims(token).getSubject();
+    }
+
+    /**
+     * 提取Token中的用户名
+     *
+     * @param token
+     * @return
+     */
+//    public String getUsernameFromToken(String token) {
+//        return extractClaims(token).getSubject();
+//    }
+    public String getAuthentication(String token) {
+        String tokenUsername = extractUsername(token);
+
+        User principal = new User();
+
+        // 构造一个 User 对象（通常这里可以使用从数据库中查询到的用户信息）
+        // User principal = new User(username, "", Collections.emptyList());
+
+        return "";
+        // 创建 Authentication 对象，传递用户和权限信息
+        // return UsernamePasswordAuthenticationToken(principal, token, "");
     }
 
 //    public boolean validateToken(String token) {
