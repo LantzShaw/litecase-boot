@@ -18,7 +18,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter implements Filter {
     // 使用Autowired需要将当前类设置为Spring 容器，可以使用@Component 或者@Bean
     @Autowired
-    JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
+//    private final JwtUtil jwtUtil;
+
+//    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+//        this.jwtUtil = jwtUtil;
+//    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

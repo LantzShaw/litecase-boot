@@ -49,15 +49,19 @@ Integer的默认值是null；int的默认值是0。
 
 以下是 `serialVersionUID` 的一些主要作用和原因：
 
-1. **版本控制**：当一个类被序列化后，它的状态被保存到一个字节流中。`serialVersionUID` 是一个唯一标识符，用于验证序列化的对象与当前的类定义是否兼容。如果类的定义发生了变化（例如添加了新字段或方法），而没有更新 `serialVersionUID`，则可能导致反序列化失败或抛出 `InvalidClassException`。
+1. **版本控制**：当一个类被序列化后，它的状态被保存到一个字节流中。`serialVersionUID`
+   是一个唯一标识符，用于验证序列化的对象与当前的类定义是否兼容。如果类的定义发生了变化（例如添加了新字段或方法），而没有更新 `serialVersionUID`
+   ，则可能导致反序列化失败或抛出 `InvalidClassException`。
 
 2. **确保兼容性**：通过显式声明 `serialVersionUID`，可以确保序列化和反序列化过程中类版本的一致性。这对于在不同版本的应用程序中传输对象非常重要。
 
 3. **提高性能**：`serialVersionUID` 可以提高反序列化过程的性能，因为它允许 JVM 在反序列化时快速检查类的版本。
 
-4. **避免默认生成**：如果类中没有声明 `serialVersionUID`，Java 序列化机制会根据类的结构自动生成一个默认的 `serialVersionUID`。这可能会因为类的细微变化（如编译器的版本）而不同，从而导致不必要的序列化问题。
+4. **避免默认生成**：如果类中没有声明 `serialVersionUID`，Java
+   序列化机制会根据类的结构自动生成一个默认的 `serialVersionUID`。这可能会因为类的细微变化（如编译器的版本）而不同，从而导致不必要的序列化问题。
 
-在你的 Java Spring 应用中，通常在实现 `Serializable` 接口的类中，会设置 `private static final long serialVersionUID = 1L;`，这样可以确保当类的结构发生变化时，能够明确知道版本的兼容性。
+在你的 Java Spring 应用中，通常在实现 `Serializable` 接口的类中，会设置 `private static final long serialVersionUID = 1L;`
+，这样可以确保当类的结构发生变化时，能够明确知道版本的兼容性。
 
 举个例子：
 
@@ -66,17 +70,19 @@ import java.io.Serializable;
 
 public class MyClass implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private String name;
     private int age;
-    
+
     // getters and setters
 }
 ```
 
-在这个例子中，`serialVersionUID` 是 `1L`，表示这是类的第一个版本。如果将来对 `MyClass` 进行更改（如添加字段），可以更新 `serialVersionUID` 的值，以指示类的版本已经变化。
+在这个例子中，`serialVersionUID` 是 `1L`，表示这是类的第一个版本。如果将来对 `MyClass`
+进行更改（如添加字段），可以更新 `serialVersionUID` 的值，以指示类的版本已经变化。
 
 **类似UserMapper.xml中，使用@Param("username") String username，使用@Param的意义**
+
 ```text
 在 MyBatis 中，`@Param` 注解用于给 SQL 查询中的参数命名。当一个方法有多个参数或者需要为单个参数提供更明确的名称时，可以使用 `@Param` 注解。这个注解的作用是将 Java 方法的参数与 SQL 语句中的占位符进行绑定。
 
@@ -136,7 +142,9 @@ public interface UserMapper {
 
 总的来说，`@Param("...")` 的主要作用就是为 SQL 语句中的参数提供一个明确的名称，并确保多个参数能够正确地绑定到 SQL 语句中。
 ```
+
 **可以不使用@Param可以吗**
+
 ```text
 可以在 MyBatis 中不使用 `@Param` 注解，但这取决于具体的场景和需求。如果不使用 `@Param` 注解，MyBatis 默认会按照 **方法参数的顺序** 来处理 SQL 中的参数绑定。如果只有一个参数或者方法的参数数量较少且顺序明确，不使用 `@Param` 是可以的。
 
@@ -448,6 +456,7 @@ selectUser 相当于 <select id="selectUser"></select>中的id 两者一定要�
 
 上述代码表示在项目启动，Spring IOC容器初始化创建之后，Bean初始化之前和销毁之前，执行@PostConstruct注解的方法。一般用于一些项目初始化的设定。比如Spring IOC Container 初始化之后，用@PostConstruct注解Quartz的 CronTrigger 用于初始化定时器（向定时器中添加定时启动的JOB）。那么项目运行时就能自动的运行CronTrigger 中的job了。
 ```
+
 ***配置多模块包扫描*
 
 ```text
@@ -536,6 +545,7 @@ SELECT COUNT(cron_id) as id FROM t_scheduled WHERE cron_name='hello';
 ```
 
 ## Code
+
 ```text
 参考文章: https://zhuanlan.zhihu.com/p/93310283#:~:text=SpringBoot%E6%95%B4%E5%90%88mybatis%E5%AE%9E%E7%8E%B0%E6%A0%B9%E6%8D%AEid%E7%9A%84%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%2C%E7%AE%80%E5%8D%95%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E7%AD%89%20UserPo%20package%20com.qianhong.user.po%3B%20import%20java.io.Serializable%3B%20%2F%2A%2A%20%2A,nickName%3B%20%2F%2F%E5%A4%96%E9%94%AE%20%E7%94%A8%E6%88%B7%E5%9C%B0%E5%9D%80id%20private%20Integer%20addressId%3B%20%2F%2F%E7%9C%81%E7%95%A5getter%E5%92%8Csetter%20%7D
 SpringBoot整合mybatis实现根据id的批量删除,简单的增删改查等
@@ -624,6 +634,7 @@ UserMapper.xml
 ```
 
 BizDeviceMapper.java
+
 ```java
 package cn.ltit.bigfish.daheng.core.device.mapper;
 
@@ -668,7 +679,7 @@ public interface BizDeviceMapper extends ExtendMapper<BizDevice> {
 
     Integer getSensor(@Param("param") Gather param);
 
-    Integer getGasTypeCount(@Param("param") Gather param,@Param("type") String type);
+    Integer getGasTypeCount(@Param("param") Gather param, @Param("type") String type);
 
     Integer getMaintRecordCount(@Param("param") Gather param);
 
@@ -676,7 +687,7 @@ public interface BizDeviceMapper extends ExtendMapper<BizDevice> {
 
     Integer getTraceCount(@Param("param") Gather param);
 
-    Integer getChangeCount(@Param("param") Gather para,@Param("type") String type);
+    Integer getChangeCount(@Param("param") Gather para, @Param("type") String type);
 
     Integer getOverdueCount(@Param("param") Gather para);
 
@@ -684,25 +695,25 @@ public interface BizDeviceMapper extends ExtendMapper<BizDevice> {
 
     List<String> getOrgName(@Param("param") Gather param);
 
-    Integer getGasCount(@Param("param") Gather param,@Param("orgName") String orgName,@Param("gasName")String gasName);
+    Integer getGasCount(@Param("param") Gather param, @Param("orgName") String orgName, @Param("gasName") String gasName);
 
-    IPage<BizDevice> getAlarmList(IPage<BizDevice> page,@Param("param") Gather param);
+    IPage<BizDevice> getAlarmList(IPage<BizDevice> page, @Param("param") Gather param);
 
-    IPage<BizDevice> getMainList(IPage<BizDevice> page,@Param("param") Gather param);
+    IPage<BizDevice> getMainList(IPage<BizDevice> page, @Param("param") Gather param);
 
-    IPage<BizDevice> getTraceaList(IPage<BizDevice> page,@Param("param") Gather param);
+    IPage<BizDevice> getTraceaList(IPage<BizDevice> page, @Param("param") Gather param);
 
-    IPage<BizDevice> getTraceaItem(IPage<BizDevice> page,@Param("param") Gather param,@Param("id") String id);
+    IPage<BizDevice> getTraceaItem(IPage<BizDevice> page, @Param("param") Gather param, @Param("id") String id);
 
-    IPage<BizDevice> getGasTypeList(IPage<BizDevice> page,@Param("param") Gather param,@Param("type") String type);
+    IPage<BizDevice> getGasTypeList(IPage<BizDevice> page, @Param("param") Gather param, @Param("type") String type);
 
 
-
-    IPage<BizDevice> getOverdueItem(IPage<BizDevice> page,@Param("param") Gather param,@Param("organizationId") String organizationId);
+    IPage<BizDevice> getOverdueItem(IPage<BizDevice> page, @Param("param") Gather param, @Param("organizationId") String organizationId);
 }
 ```
 
 BizDeviceMapper.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -910,40 +921,40 @@ BizDeviceMapper.xml
     </select>
     <select id="getherTwo" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
         SELECT gas_name,
-               gas_type,
-               count(sensor.id) sensorSum
+        gas_type,
+        count(sensor.id) sensorSum
         FROM biz_device_sensor sensor
-                 INNER JOIN biz_device device on sensor.device_id = device.id
+        INNER JOIN biz_device device on sensor.device_id = device.id
         WHERE device.organization_id = #{organizationId}
         GROUP BY gas_name, gas_type
     </select>
     <select id="getherThree" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
         SELECT count(1) traceSum,
-               sensor.sensor_name
+        sensor.sensor_name
         FROM biz_device device
-                 INNER JOIN biz_device_sensor sensor ON sensor.device_id = device.id
-                 INNER JOIN biz_device_sensor_trace trace ON sensor.id = trace.sensor_id
+        INNER JOIN biz_device_sensor sensor ON sensor.device_id = device.id
+        INNER JOIN biz_device_sensor_trace trace ON sensor.id = trace.sensor_id
         WHERE device.organization_id = #{organizationId}
         GROUP BY sensor.id
     </select>
     <select id="getherFour" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
         SELECT count(1) alarmSum,
-               sensor.sensor_name
+        sensor.sensor_name
         FROM biz_data_alarm alarm
-                 INNER JOIN biz_device_sensor sensor on alarm.sensor_id = sensor.id
-                 INNER JOIN biz_workflow_alarm_deal_record record on record.device_alarm_id = alarm.id
-                 INNER JOIN biz_device device ON sensor.device_id = device.id
+        INNER JOIN biz_device_sensor sensor on alarm.sensor_id = sensor.id
+        INNER JOIN biz_workflow_alarm_deal_record record on record.device_alarm_id = alarm.id
+        INNER JOIN biz_device device ON sensor.device_id = device.id
         WHERE device.organization_id = #{organizationId}
         GROUP BY sensor.id
     </select>
     <select id="getherFive" resultType="cn.ltit.bigfish.daheng.core.device.model.dto.GatherItem">
         SELECT count(1) maintSum,
-               sensor.sensor_name
+        sensor.sensor_name
         FROM biz_workflow_device_maint_record record
-                 INNER JOIN biz_workflow_device_maint_plan_sensor plan ON plan.plan_id = record.device_maint_id
-            OR plan.plan_id = record.id
-                 INNER JOIN biz_device_sensor sensor ON plan.sensor_id = sensor.id
-                 INNER JOIN biz_device device ON sensor.device_id = device.id
+        INNER JOIN biz_workflow_device_maint_plan_sensor plan ON plan.plan_id = record.device_maint_id
+        OR plan.plan_id = record.id
+        INNER JOIN biz_device_sensor sensor ON plan.sensor_id = sensor.id
+        INNER JOIN biz_device device ON sensor.device_id = device.id
         WHERE device.organization_id = #{organizationId}
         GROUP BY sensor.id
     </select>
@@ -1236,18 +1247,21 @@ BizDeviceMapper.xml
 ## Questions
 
 **为什么不推荐使用@Autowired注解，而推荐使用@Resource注解，或者使用构造函数+setter注入？**
-在 Spring 框架中，`@Autowired` 注解广泛用于自动注入依赖，但在一些场景下并不推荐直接使用 `@Autowired`，尤其是在构造函数注入中。以下是一些不推荐使用 `@Autowired` 的原因，以及一些更好的替代方案。
+在 Spring 框架中，`@Autowired` 注解广泛用于自动注入依赖，但在一些场景下并不推荐直接使用 `@Autowired`
+，尤其是在构造函数注入中。以下是一些不推荐使用 `@Autowired` 的原因，以及一些更好的替代方案。
 
 ### 1. **构造函数注入更安全、明确**
 
 使用 `@Autowired` 注解进行字段注入会让类的依赖关系不够显式，尤其是在类的构造函数中没有明确传入依赖对象时，可能会导致代码的可测试性和可维护性降低。
 
 #### 问题：
+
 - **依赖隐藏**：依赖关系直接注入到类的字段中，依赖不通过构造函数传入，外部难以知道这个类依赖了哪些组件。
 - **不利于测试**：在单元测试中，字段注入使得模拟对象或手动注入依赖变得困难，因为字段无法通过构造函数传入。
 - **不适用于不可变对象**：字段注入后依赖的对象可能会在运行时被替换或改变，导致对象状态不再不可变。
 
 #### 推荐方式：
+
 使用 **构造函数注入** 更明确、更安全，特别是对于类的依赖关系，构造函数注入可以避免上面的问题。
 
 ```java
@@ -1269,9 +1283,11 @@ public class MyService {
 
 ### 2. **字段注入使代码不够灵活**
 
-字段注入使得依赖的字段直接被注入，但在某些场景下，例如需要延迟初始化或重写依赖时，字段注入显得不够灵活。构造函数或 setter 注入则更灵活，可以提供更多控制。
+字段注入使得依赖的字段直接被注入，但在某些场景下，例如需要延迟初始化或重写依赖时，字段注入显得不够灵活。构造函数或 setter
+注入则更灵活，可以提供更多控制。
 
 #### 示例：字段注入（不推荐）
+
 ```java
 public class MyService {
 
@@ -1283,6 +1299,7 @@ public class MyService {
 ```
 
 #### 推荐方式：构造函数注入或 setter 注入
+
 ```java
 public class MyService {
 
@@ -1305,7 +1322,8 @@ public class MyService {
 
 ### 3. **代码的可测试性**
 
-使用 `@Autowired` 注入字段时，测试类的依赖变得困难，因为无法在测试中轻松模拟或传递依赖项。构造函数注入可以通过测试框架如 JUnit 或 Mockito 轻松创建对象并传递 mock 依赖项。
+使用 `@Autowired` 注入字段时，测试类的依赖变得困难，因为无法在测试中轻松模拟或传递依赖项。构造函数注入可以通过测试框架如
+JUnit 或 Mockito 轻松创建对象并传递 mock 依赖项。
 
 #### 示例：构造函数注入提高测试性
 
@@ -1345,14 +1363,17 @@ public class B {
 
 ### 5. **不使用 `@Autowired` 的替代方案**
 
-- **构造函数注入**：这是最推荐的方式，尤其是在使用 Spring 4.3 及以上版本时，Spring 会自动识别构造函数注入，无需 `@Autowired` 注解。
+- **构造函数注入**：这是最推荐的方式，尤其是在使用 Spring 4.3 及以上版本时，Spring 会自动识别构造函数注入，无需 `@Autowired`
+  注解。
 
 - **Setter 注入**：在某些情况下，如果依赖项不是必须的或者需要延迟注入，可以使用 `setter` 方法配合 `@Autowired` 注解。
 
 - **配置类中手动注入**：在 `@Configuration` 类中，可以手动配置和注入依赖项。
 
 #### 示例：手动注入依赖
+
 ```java
+
 @Configuration
 public class AppConfig {
 
@@ -1376,18 +1397,21 @@ public class AppConfig {
 
 因此，除非有特殊需求（如延迟初始化或可选依赖），构造函数注入是比 `@Autowired` 字段注入更好的选择。
 
-
 **filter中如何注入util类**
 
-在 Spring Boot 的 `Filter` 中，注入 `Util` 类或 Spring 管理的其他 Bean 可以通过以下几种方式实现。由于 `Filter` 本身并不是由 Spring 管理的组件，因此不能直接使用常规的 `@Autowired` 方式，但我们可以通过其他方法使其获得 Spring 容器中的 Bean。
+在 Spring Boot 的 `Filter` 中，注入 `Util` 类或 Spring 管理的其他 Bean 可以通过以下几种方式实现。由于 `Filter` 本身并不是由
+Spring 管理的组件，因此不能直接使用常规的 `@Autowired` 方式，但我们可以通过其他方法使其获得 Spring 容器中的 Bean。
 
 ### 1. 使用 `@Component` 注册 `Filter`
+
 可以将 `Filter` 声明为一个 Spring 管理的 Bean，这样可以直接通过 `@Autowired` 注入依赖。示例如下：
 
 #### 代码示例：
 
 ##### 1.1 创建 `JwtUtils` 工具类：
+
 ```java
+
 @Component
 public class JwtUtils {
     public String generateToken(String username) {
@@ -1398,6 +1422,7 @@ public class JwtUtils {
 ```
 
 ##### 1.2 创建自定义 `Filter` 并注入 `JwtUtils`：
+
 ```java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -1429,14 +1454,18 @@ public class JwtAuthenticationFilter implements Filter {
 ```
 
 ##### 1.3 注册 `Filter`：
+
 使用 `@Component` 将 `Filter` 注册到 Spring 容器，Spring 会自动管理 `Filter` 并将其应用到请求中。
 
 ### 2. 使用 `FilterRegistrationBean` 手动注册 `Filter`
-如果你不想通过 `@Component` 自动扫描方式来注册 `Filter`，可以通过 `FilterRegistrationBean` 在配置类中手动注册 `Filter`，并将 `Util` 类注入。
+
+如果你不想通过 `@Component` 自动扫描方式来注册 `Filter`，可以通过 `FilterRegistrationBean` 在配置类中手动注册 `Filter`
+，并将 `Util` 类注入。
 
 #### 代码示例：
 
 ##### 2.1 自定义 `JwtAuthenticationFilter`：
+
 ```java
 public class JwtAuthenticationFilter implements Filter {
 
@@ -1464,6 +1493,7 @@ public class JwtAuthenticationFilter implements Filter {
 ```
 
 ##### 2.2 在配置类中注册 `Filter`：
+
 ```java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1483,7 +1513,491 @@ public class FilterConfig {
 ```
 
 ### 总结：
+
 - **方式1**：使用 `@Component` 将 `Filter` 注册到 Spring 容器，并通过 `@Autowired` 注入工具类。
 - **方式2**：使用 `FilterRegistrationBean` 手动注册 `Filter`，通过构造函数注入工具类。
 
 这两种方式都能让 `Filter` 正常使用 Spring 管理的 Bean，例如 `JwtUtils` 等。
+
+**Spring security**
+In recent versions of Spring Security (5.0+), `WebSecurityConfigurerAdapter` has been deprecated in favor of a more
+flexible and modern approach using component-based security configuration.
+
+Here’s how you can update your security configuration to the latest approach:
+
+### Modern Configuration Approach
+
+1. **Using `SecurityFilterChain`**
+
+   Spring Security 5.0+ encourages using a `SecurityFilterChain` bean to configure security. Here’s how you can set it
+   up:
+
+   ```java
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+   import org.springframework.security.config.annotation.web.builders.WebSecurity;
+   import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+   import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+   import org.springframework.security.web.SecurityFilterChain;
+
+   @Configuration
+   @EnableWebSecurity
+   public class SecurityConfig {
+
+       @Bean
+       public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+           http
+               .authorizeHttpRequests(authorizeRequests ->
+                   authorizeRequests
+                       .requestMatchers("/ignores1").permitAll()  // Modern approach
+                       .anyRequest().authenticated()
+               )
+               .formLogin(withDefaults());  // Configures form-based login
+           return http.build();
+       }
+   }
+   ```
+
+2. **Using `AuthenticationManagerBuilder` for Authentication**
+
+   If you need to configure authentication (e.g., in-memory, JDBC, or custom user details), you can
+   use `AuthenticationManagerBuilder`:
+
+   ```java
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+   import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+   import org.springframework.security.config.annotation.web.builders.WebSecurity;
+   import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+   import org.springframework.security.web.SecurityFilterChain;
+
+   @Configuration
+   @EnableWebSecurity
+   public class SecurityConfig {
+
+       @Bean
+       public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+           http
+               .authorizeHttpRequests(authorizeRequests ->
+                   authorizeRequests
+                       .requestMatchers("/ignores1").permitAll()
+                       .anyRequest().authenticated()
+               )
+               .formLogin(withDefaults());
+           return http.build();
+       }
+
+       @Bean
+       public AuthenticationManagerBuilder authenticationManagerBuilder(HttpSecurity http) throws Exception {
+           AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationManagerBuilder.class));
+           authenticationManagerBuilder
+               .inMemoryAuthentication()
+               .withUser("user")
+               .password("{noop}password")
+               .roles("USER");
+           return authenticationManagerBuilder;
+       }
+   }
+   ```
+
+3. **Configure `WebSecurityCustomizer`**
+
+   If you need to customize the web security configuration (e.g., ignoring static resources), you can
+   use `WebSecurityCustomizer`:
+
+   ```java
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+   import org.springframework.security.config.annotation.web.builders.WebSecurity;
+   import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+   import org.springframework.security.web.SecurityFilterChain;
+   import org.springframework.security.web.webbuilder.WebSecurityCustomizer;
+
+   @Configuration
+   @EnableWebSecurity
+   public class SecurityConfig {
+
+       @Bean
+       public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+           http
+               .authorizeHttpRequests(authorizeRequests ->
+                   authorizeRequests
+                       .requestMatchers("/ignores1").permitAll()
+                       .anyRequest().authenticated()
+               )
+               .formLogin(withDefaults());
+           return http.build();
+       }
+
+       @Bean
+       public WebSecurityCustomizer webSecurityCustomizer() {
+           return (web) -> web.ignoring().requestMatchers("/resources/**");
+       }
+   }
+   ```
+
+### Summary
+
+- **Use `SecurityFilterChain`** for configuring security rules.
+- **Use `AuthenticationManagerBuilder`** for authentication configurations.
+- **Use `WebSecurityCustomizer`** if you need to customize web security further, such as ignoring static resources.
+
+This approach gives you more flexibility and aligns with the latest best practices in Spring Security. If you have more
+questions or need further help, just let me know!
+
+这个问题怎么解决？？？
+**You are asking Spring Security to ignore Mvc [pattern='/ignores1']. This is not recommended -- please use permitAll
+via HttpSecurity#authorizeHttpRequests instead.**
+
+**Spring Security 账号密码设置**
+To configure login with username and password using Spring Security in recent versions, you can
+use `SecurityFilterChain` to define your security configuration. Here’s a step-by-step guide to set up form-based
+authentication with username and password:
+
+### 1. **Set Up Your Security Configuration**
+
+You need to create a configuration class that defines the security settings. This will include setting up form-based
+login, specifying user details, and configuring authorization rules.
+
+#### Example Configuration
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/public/**").permitAll()  // Allow access to public URLs
+                                .anyRequest().authenticated()  // Require authentication for all other URLs
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")  // Custom login page URL
+                                .permitAll()  // Allow access to the login page without authentication
+                )
+                .logout(logout ->
+                        logout
+                                .permitAll()  // Allow logout
+                );
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManagerBuilder authenticationManagerBuilder(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationManagerBuilder.class));
+        authenticationManagerBuilder
+                .inMemoryAuthentication()
+                .withUser("user")
+                .password("{noop}password")  // {noop} is used to indicate no encoding
+                .roles("USER");
+        return authenticationManagerBuilder;
+    }
+}
+```
+
+### 2. **Create Login and Logout Pages**
+
+If you use custom login and logout pages, you need to create these pages in your templates directory. For example:
+
+#### Login Page (`src/main/resources/templates/login.html`):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<h2>Login Page</h2>
+<form action="/login" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <button type="submit">Login</button>
+</form>
+</body>
+</html>
+```
+
+#### Logout Page (`src/main/resources/templates/logout.html`):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+</head>
+<body>
+<h2>You have been logged out.</h2>
+<a href="/login">Login Again</a>
+</body>
+</html>
+```
+
+### 3. **Add User Details Service (Optional)**
+
+If you need to load user details from a database or another source, you should implement `UserDetailsService` and
+configure it in your security configuration.
+
+#### Example `UserDetailsService` Implementation:
+
+```java
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Replace with your user lookup logic
+        if ("user".equals(username)) {
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(username)
+                    .password("{noop}password")  // Use bcrypt or other password encoders in production
+                    .roles("USER")
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+    }
+}
+```
+
+#### Integrate `UserDetailsService` into Security Configuration:
+
+```java
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final UserDetailsService userDetailsService;
+
+    @Autowired
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/public/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .permitAll()
+                )
+                .logout(logout ->
+                        logout
+                                .permitAll()
+                );
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManagerBuilder authenticationManagerBuilder(HttpSecurity http) throws Exception {
+        return new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationManagerBuilder.class))
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());  // Use a password encoder
+    }
+}
+```
+
+### Summary
+
+1. **Configure `SecurityFilterChain`** for modern security configuration.
+2. **Create custom login and logout pages** if needed.
+3. **Use `UserDetailsService`** for custom user details and authentication logic.
+
+This setup will enable form-based login with username and password in your Spring Boot application. If you have more
+questions or need further help, feel free to ask!
+
+**Spring Security**
+In recent versions of Spring Security, the way to configure authentication has changed,
+and `http.getSharedObject(AuthenticationManagerBuilder.class)` is no longer used. Instead, you should
+use `AuthenticationManager` directly or configure it through `AuthenticationManagerBuilder` in a different way.
+
+Here’s how you can configure authentication in modern Spring Security versions:
+
+### 1. **Use `AuthenticationManager` Bean**
+
+In Spring Security 5.0 and later, you can configure `AuthenticationManager` as a bean and use it directly in your
+security configuration. Here's how to do it:
+
+#### Configure `AuthenticationManager` Bean
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers("/public/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(formLogin ->
+                formLogin
+                    .loginPage("/login")
+                    .permitAll()
+            )
+            .logout(logout ->
+                logout
+                    .permitAll()
+            );
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationConfiguration.class).getAuthenticationManager());
+        
+        authenticationManagerBuilder
+            .inMemoryAuthentication()
+            .withUser("user")
+            .password("{noop}password")  // Use a password encoder in production
+            .roles("USER");
+
+        return authenticationManagerBuilder.build();
+    }
+}
+```
+
+### 2. **Define `UserDetailsService`**
+
+If you're using a custom `UserDetailsService`:
+
+#### Implement `UserDetailsService`
+
+```java
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Replace with your user lookup logic
+        if ("user".equals(username)) {
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(username)
+                    .password("{noop}password")  // Use a password encoder in production
+                    .roles("USER")
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+    }
+}
+```
+
+#### Inject `UserDetailsService` into Security Configuration
+
+```java
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers("/public/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(formLogin ->
+                formLogin
+                    .loginPage("/login")
+                    .permitAll()
+            )
+            .logout(logout ->
+                logout
+                    .permitAll()
+            );
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationConfiguration.class).getAuthenticationManager());
+
+        authenticationManagerBuilder
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(new BCryptPasswordEncoder());  // Use a password encoder
+
+        return authenticationManagerBuilder.build();
+    }
+}
+```
+
+### Summary
+
+1. **Use `AuthenticationManager` as a bean** and configure it directly in your security configuration.
+2. **Define and inject `UserDetailsService`** if you need custom user lookup logic.
+3. **Avoid using deprecated methods** and adapt to modern Spring Security configuration practices.
+
+This updated approach will help you configure authentication properly in your Spring Boot application. If you have more
+questions or need further clarification, feel free to ask!

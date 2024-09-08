@@ -28,14 +28,15 @@ public class AuthController {
     public R<String> login(@RequestBody UserDto userDto) {
         User user = userService.findUsername(userDto.getUsername());
 
-        if(user == null) {
+        if (user == null) {
             return R.success("登录失败，用户不存在");
         }
 
-        if(!userDto.getPassword().equals(user.getPassword())) {
+        if (!userDto.getPassword().equals(user.getPassword())) {
             return R.success("登录失败，密码错误");
         }
 
         return R.success(jwtUtil.generateToken(userDto.getUsername()));
+//        return R.success("hello");
     }
 }
