@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     # 密码纯数字不需要加引号
-    password: 123456
+    password: 12345678
   #    默认配置 hikari数据源
   #    type: com.zaxxer.hikari.HikariDataSource
   #    hikari:

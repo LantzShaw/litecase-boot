@@ -2,6 +2,8 @@ package com.litecase.boot.web.common;
 
 import com.litecase.boot.web.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public R<String> exceptionHandler(SQLIntegrityConstraintViolationException exception) {
 
-        if(exception.getMessage().contains("Duplicate entity")) {
+        if (exception.getMessage().contains("Duplicate entity")) {
             String[] split = exception.getMessage().split(" ");
 
             return R.error(split[2] + "用户已存在");
@@ -40,5 +42,12 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage());
 
         return R.success(exception.getMessage());
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
+        // 处理所有未捕获的异常并返回错误信息
+        return ApiResponse.errorWithStatus(500, "Internal Server Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

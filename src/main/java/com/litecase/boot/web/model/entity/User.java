@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 @TableName("user")
 @Data
 public class User implements Serializable {
-    private  static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户ID
      */
     @TableId(value = "userId", type = IdType.ASSIGN_ID)
-    private Long useId;
+    private Long userId;
 
     /**
      * 用户名
@@ -24,7 +24,7 @@ public class User implements Serializable {
     private String username;
 
     /**
-     *  密码
+     * 密码
      */
     private String password;
 

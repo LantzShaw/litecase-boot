@@ -4,24 +4,25 @@
 <!-- 上面是头部命名空间 -->
 <mapper namespace="com.litecase.boot.web.mapper.UserMapper"> <!--对应的mapper类的包路径-->
     <resultMap id="baseResultMap" type="com.litecase.boot.web.model.entity.User"> <!--返回查询结果对应的实体类-->
-        <id column="userId" property="userId"/> <!--这里的id代表主键-->
+        <id column="user_Id" property="userId"/> <!--这里的id代表主键-->
         <result column="username" property="username"/>
-        <result column="nickname" property="nickname" />
+        <result column="nickname" property="nickname"/>
         <result column="gender" property="gender"/>
         <result column="age" property="age"/>
-        <result column="phone_number" property="phoneNumber" />
-        <result column="avatar" property="avatar" />
-        <result column="email" property="email" />
-        <result column="identity_number" property="identityNumber" />
-        <result column="status" property="status" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="created_by" property="createdBy" />
-        <result column="updated_by" property="updatedBy" />
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="avatar" property="avatar"/>
+        <result column="email" property="email"/>
+        <result column="identity_number" property="identityNumber"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_by" property="updatedBy"/>
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        userId, username, nickname, gender, age, avatar,
+        user_Id
+        , username, nickname, gender, age, avatar,
         phone_number, email, identity_number, status, create_time,
         update_time, created_by, updated_by
     </sql>
@@ -33,7 +34,7 @@
 
     <select id="findByUsername" resultMap="baseResultMap">
         SELECT
-            <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM user
         WHERE username = #{username}
     </select>
@@ -62,9 +63,9 @@
         where t.id = #{id}
     </select>
     <select id="findUserById" resultType="com.litecase.boot.web.model.entity.User">
-        SELECT
-        *
-        FROM user t WHERE t.id = #{id}
+        SELECT *
+        FROM user t
+        WHERE t.id = #{id}
     </select>
     <update id="updateUserById">
         UPDATE user

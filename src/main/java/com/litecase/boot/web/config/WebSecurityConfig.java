@@ -1,17 +1,32 @@
 package com.litecase.boot.web.config;
 
+import com.litecase.boot.web.filter.JwtAuthenticationFilter;
+import com.litecase.boot.web.service.UserService;
 import jakarta.servlet.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,38 +39,68 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        List<Filter> filterList = new ArrayList<Filter>();
-//        return new DefaultSecurityFilterChain(new AntPathRequestMatcher("/**"), filterList);
-
-        httpSecurity.authorizeHttpRequests(requests -> requests.requestMatchers("/login").permitAll().anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login").permitAll())
-                .logout(logout -> logout.permitAll());
-
-        return httpSecurity.build();
-    }
+    @Autowired
+    JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        var user = User.withUsername("Lantz").password("123456").authorities("admin").build();
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //  List<Filter> filterList = new ArrayList<Filter>();
+        //  return new DefaultSecurityFilterChain(new AntPathRequestMatcher("/**"), filterList);
 
-        manager.createUser(User
-                .withUsername("Lantz")
-                .password("123456")
-                .roles("user")
-                .build()
-        );
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/auth/login", "/auth/register", "/auth/test").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/admin").hasRole("admin")
+                        .anyRequest().authenticated()
+                )
+                // 因为是 前后端分离 要关闭 csrf()
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                // 不通过 session 获取 SecurityContext
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .logout(AbstractHttpConfigurer::disable)
+//                .authenticationProvider(authenticationProvider -> )
+//                .headers(headers -> headers.addHeaderWriter(new StaticHeadersWriter("Content-Type", "application/json")))
+//                .headers(headers -> headers.addHeaderWriter(new StaticHeadersWriter("Content-Type", "application/json")))
+//                        .contentSecurityPolicy(""))
+        ;
 
-        return manager;
+//        http.addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
+//    @Bean
+//    public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//
+////        provider.setUserDetailsService();
+//
+//    }
+
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        //  var user = User.withUsername("Lantz").password("123456").authorities("admin").build();
+//
+//        manager.createUser(User
+//                .withUsername("Lantz")
+//                .password("123456")
+//                .roles("admin")
+//                .build()
+//        );
+//
+//        return manager;
+//    }
 
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
 
-//
 //import org.springframework.context.annotation.Bean;
 //        import org.springframework.context.annotation.Configuration;
 //        import org.springframework.security.config.annotation.web.builders.HttpSecurity;
