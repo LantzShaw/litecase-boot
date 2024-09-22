@@ -1879,20 +1879,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/public/**").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(formLogin ->
-                formLogin
-                    .loginPage("/login")
-                    .permitAll()
-            )
-            .logout(logout ->
-                logout
-                    .permitAll()
-            );
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/public/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .permitAll()
+                )
+                .logout(logout ->
+                        logout
+                                .permitAll()
+                );
         return http.build();
     }
 
@@ -1900,12 +1900,12 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationConfiguration.class).getAuthenticationManager());
-        
+
         authenticationManagerBuilder
-            .inMemoryAuthentication()
-            .withUser("user")
-            .password("{noop}password")  // Use a password encoder in production
-            .roles("USER");
+                .inMemoryAuthentication()
+                .withUser("user")
+                .password("{noop}password")  // Use a password encoder in production
+                .roles("USER");
 
         return authenticationManagerBuilder.build();
     }
@@ -1962,20 +1962,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/public/**").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(formLogin ->
-                formLogin
-                    .loginPage("/login")
-                    .permitAll()
-            )
-            .logout(logout ->
-                logout
-                    .permitAll()
-            );
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/public/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .permitAll()
+                )
+                .logout(logout ->
+                        logout
+                                .permitAll()
+                );
         return http.build();
     }
 
@@ -1985,12 +1985,25 @@ public class SecurityConfig {
                 new AuthenticationManagerBuilder(http.getSharedObject(AuthenticationConfiguration.class).getAuthenticationManager());
 
         authenticationManagerBuilder
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(new BCryptPasswordEncoder());  // Use a password encoder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());  // Use a password encoder
 
         return authenticationManagerBuilder.build();
     }
 }
+```
+
+报错`org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'productServiceImpl': Unsatisfied dependency expressed through field 'baseMapper': Error creating bean with name 'productMapper' defined in file [/Users/lantzshaw/Documents/Lantz/litecase-boot/target/classes/com/litecase/boot/web/mapper/ProductMapper.class]: Property 'sqlSessionFactory' or 'sqlSessionTemplate' are required`
+
+```text
+1. 注意引入的mybatis-plus的坐标为
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+    <version>3.5.7</version>
+</dependency>
+2. 注意spring-boot3的版本与mybatis-plus的版本匹配
+3. 注意mapper.xml文件不能为空且报错，否则会报错，也要配置 mapper-locations: classpath:mapper/*.xml # 配置mybatis扫描mapper文件xml的路径
 ```
 
 ### Summary

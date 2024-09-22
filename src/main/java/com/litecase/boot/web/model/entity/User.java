@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Primary;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@TableName("user")
 @Data
+@TableName("user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * 用户ID
      */
-    @TableId(value = "userId", type = IdType.ASSIGN_ID)
+    @TableId(value = "user_id", type = IdType.ASSIGN_ID)
     private Long userId;
 
     /**

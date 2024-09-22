@@ -1,17 +1,25 @@
 package com.litecase.boot;
 
+import com.litecase.boot.web.mapper.ProductMapper;
+import com.litecase.boot.web.model.entity.Product;
+import com.litecase.boot.web.model.entity.User;
+//import com.litecase.boot.web.service.UserService;
+import com.litecase.boot.web.service.ProductService;
+import com.litecase.boot.web.service.UserService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
@@ -26,6 +34,15 @@ class LitecaseBootApplicationTests {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+//    @Autowired
+//    ProductService productService;
+
+    @Autowired
+    ProductMapper productMapper;
+
+    @Autowired
+    UserService userService;
 
     /**
      * 操作String类型数据
@@ -62,13 +79,13 @@ class LitecaseBootApplicationTests {
 
         Set<String> movies = hashOperations.keys("movies");
 
-        for (String key: movies) {
+        for (String key : movies) {
             System.out.println(key);
         }
 
         List values = hashOperations.values("movies");
 
-        for  (Object value: values) {
+        for (Object value : values) {
             System.out.println(value);
         }
     }
@@ -85,7 +102,7 @@ class LitecaseBootApplicationTests {
 
         List<String> books = listOperations.range("books", 0, -1);
 
-        for (String book: books) {
+        for (String book : books) {
             System.out.println(book);
         }
 
@@ -104,7 +121,7 @@ class LitecaseBootApplicationTests {
 
         Set<String> mySet = setOperations.members("mySet");
 
-        for (String o: mySet) {
+        for (String o : mySet) {
             System.out.println(o);
         }
 
@@ -123,7 +140,7 @@ class LitecaseBootApplicationTests {
 
         Set<String> mZset = zSetOperations.range("mZset", 0, -1);
 
-        for (String o: mZset) {
+        for (String o : mZset) {
             System.out.println(o);
         }
 
@@ -163,4 +180,51 @@ class LitecaseBootApplicationTests {
         connection.close();
     }
 
+
+    @Test
+    void testUserSelect() {
+//        User user = userService.findUsername("LantzShaw");
+
+//        System.out.println("user: " + user);
+        User user = userService.findUsername("LantzShaw");
+
+        System.out.println("============user===========" + user);
+    }
+
+    @Test
+    void testUserInsert() {
+        User user = new User();
+
+        user.setUsername("Bob");
+        user.setPassword(UUID.randomUUID().toString());
+
+        userService.save(user);
+    }
+
+
+    @Test
+    void testSelectProduct() {
+        System.out.println("--------------Select All Product-----------------");
+
+        List<Product> productList = productMapper.selectList(null);
+
+        for (Product product : productList) {
+            System.out.println(product);
+        }
+    }
+
+    @Test
+    void testPasswordEncorder() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        String password = passwordEncoder.encode("123456");
+
+        boolean isMatched = passwordEncoder.matches("123456", password);
+
+
+        System.out.println("password: " + password + "isMatched" + isMatched);
+
+//        $2a$10$lt9jDjDQ36/BcKHwny6qTetavTVN74.Ezzrme18.vQCCShsBS6uUq
+        // $2a$10$zLCLzS3CiWoOidTfyIp5he5bzktOYaT0F2k2zaCS3t7MMWejbcsgK
+    }
 }

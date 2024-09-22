@@ -68,7 +68,7 @@ public class ApiResponse<T> {
         return new ResponseEntity<>(ApiResponse.success(data), status);
     }
 
-    public static ResponseEntity<ApiResponse<?>> errorWithStatus(int statusCode, String message, HttpStatus status) {
+    public static <T> ResponseEntity<ApiResponse<T>> errorWithStatus(int statusCode, String message, HttpStatus status) {
         return new ResponseEntity<>(ApiResponse.error(statusCode, message), status);
     }
 

@@ -99,7 +99,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                    return;
 //                }
 
+
+                log.info("The token: {}", token);
+
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                    log.info("Jwt authentication filter: {}", username);
+
+
                     if (jwtUtil.validateToken(token, username)) {
                         // 获取 Authentication 对象
                         // Authentication authentication = jwtUtil.getAuthentication(token);

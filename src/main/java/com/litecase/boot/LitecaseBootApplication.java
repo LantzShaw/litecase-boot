@@ -14,6 +14,7 @@ import java.sql.Connection;
 
 @SpringBootApplication
 //@MapperScan(basePackages = "com.litecase.boot.web.mapper")
+//@MapperScan("com.litecase.boot.web.mapper")
 @MapperScan(annotationClass = Mapper.class)
 // @EnableScheduling 表明该类中存在定时任务
 public class LitecaseBootApplication {

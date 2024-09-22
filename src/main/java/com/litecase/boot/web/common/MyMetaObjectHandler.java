@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        log.info("插入时公共字段填充....");
+        log.info("插入时公共字段填充....", metaObject);
 
-        metaObject.setValue("creatTime", LocalDateTime.now());
-        metaObject.setValue("createBy", BaseContext.getCurrentId());
-        metaObject.setValue("updatedTime", LocalDateTime.now());
-        metaObject.setValue("updatedBy", 1);
+        metaObject.setValue("createTime", LocalDateTime.now());
+        metaObject.setValue("createdBy", BaseContext.getCurrentId());
+        metaObject.setValue("updateTime", LocalDateTime.now());
+        metaObject.setValue("updatedBy", BaseContext.getCurrentId());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateBy", 1);
+        metaObject.setValue("updatedBy", BaseContext.getCurrentId());
     }
 }

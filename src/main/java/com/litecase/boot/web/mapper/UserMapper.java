@@ -16,7 +16,7 @@ public interface UserMapper extends BaseMapper<User> {
     User getUserById(@Param("userId") String userId);
 
     /**
-     *  查询用户名是否存在
+     * 查询用户名是否存在
      *
      * @param username
      * @return

@@ -22,7 +22,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         user_Id
-        , username, nickname, gender, age, avatar,
+        , username, password, nickname, gender, age, avatar,
         phone_number, email, identity_number, status, create_time,
         update_time, created_by, updated_by
     </sql>
@@ -39,9 +39,9 @@
         WHERE username = #{username}
     </select>
 
-    <insert id="addUser">
-        INSERT INTO user (id, username, gender, age)
-        VALUES (#{User.username}, #{User.gender}, #{User.age})
+    <insert id="addUser" useGeneratedKeys="false" keyProperty="userId" keyColumn="user_id">
+        INSERT INTO user (username, password)
+        VALUES (#{User.username}, #{User.password})
     </insert>
     <select id="selectByUserId" resultMap="baseResultMap"
             parameterType="java.lang.Integer"> <!--传参是对象的话parameterType就写那个对象的路径,这边是int的type-->

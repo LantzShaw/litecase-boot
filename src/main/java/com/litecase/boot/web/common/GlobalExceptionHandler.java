@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
-        // 处理所有未捕获的异常并返回错误信息
-        return ApiResponse.errorWithStatus(500, "Internal Server Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
+//        // 处理所有未捕获的异常并返回错误信息
+//        return ApiResponse.errorWithStatus(500, "Internal Server Error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
