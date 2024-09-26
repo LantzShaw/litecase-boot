@@ -18,19 +18,13 @@ import java.sql.Connection;
 @MapperScan(annotationClass = Mapper.class)
 // @EnableScheduling 表明该类中存在定时任务
 public class LitecaseBootApplication {
-
-
     private static final Logger log = LoggerFactory.getLogger(LitecaseBootApplication.class);
 
-
     public static void main(String[] args) {
-
-
 //        Pet pet = new Pet();
 
         SpringApplication.run(LitecaseBootApplication.class, args);
     }
-
 //    在定时执行的方法上面添加@Scheduled(cron = "*/6 * * * * ?")
 //    @Scheduled(cron = "*/6 * * * * ?")
 //    public void sayHello() {

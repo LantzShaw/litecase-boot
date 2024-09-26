@@ -7,3 +7,8 @@
 ```
 
 2. 关于spring security新版的配置，[参考代码](https://github.com/bezkoder/spring-boot-spring-security-jwt-authentication)
+
+```text
+https://github.com/bezkoder/spring-boot-login-example
+https://github.com/18061495586/Spring-Security-Demo
+```

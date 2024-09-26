@@ -121,6 +121,12 @@
             <artifactId>jjwt</artifactId>
             <version>0.12.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
     </dependencies>
     <!-- 打包 -->
     <build>
