@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
-public class EasyExcelTests {
+public class PathTests {
     @Test
     void testGetPath() {
         // String path = EasyExcelTests.class.getResource("/").getPath();
