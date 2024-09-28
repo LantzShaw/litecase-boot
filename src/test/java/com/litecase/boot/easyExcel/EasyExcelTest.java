@@ -16,7 +16,9 @@ public class EasyExcelTest {
     @Test
     public void simpleRead() {
 //        String fileName = FileUtil.getPath() + "static" + File.separator + "excel" + File.separator + "demo.xlsx";
-        String fileName = FileUtil.getPath() + "static" + "/" + "excel" + "/" + "demo.xlsx";
+//        String fileName = FileUtil.getPath() + "demo" + File.separator + "demo.xlsx";
+        String fileName = FileUtil.getPath() + File.separator + "demo.xlsx";
+//        String fileName = "/Users/Documents/" + "demo" + File.separator + "demo.xlsx";
 
 //        InputStream inputStream = FileUtil.class.getResourceAsStream("static/excel/demo.xlsx");
 
