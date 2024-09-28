@@ -7,4 +7,8 @@ public class FileUtil {
 
         return path;
     }
+
+//    public static String getPath() {
+//        return FileUtil.class.getResource("/").getPath();
+//    }
 }
